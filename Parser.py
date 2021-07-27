@@ -24,6 +24,16 @@ def split_lines(tokens):
     return out
 
 inverse = {"(": ")", "{": "}", "[": "]"}
+def find_matching(string, start_pos):
+    open_brack = string[start_pos]
+    close_brack = inverse[open_brack]
+    needed = 1
+    n = start_pos+1
+    while n < len(string) and needed != 0:
+        if string[n] == open_brack: needed+=1
+        elif string[n] == close_brack: needed-=1
+    return n-1
+
 def build_functions(line):
     #split_to_function_calls
     #compress each function call
