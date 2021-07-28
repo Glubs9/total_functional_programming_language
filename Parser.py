@@ -1,5 +1,3 @@
-from Utility import bind
-
 #this would be a lot easier with a tagged union
 #i kinda wanna write it in haskell, for the fun of it. maybe do it later?
     #honestly i'm might switch. well nah cuase how do we do asynchronous stuff
