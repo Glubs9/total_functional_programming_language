@@ -2,7 +2,7 @@ def append_not_empty(li, string):
     if string != "":
         li.append(string)
 
-TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "$", "0"} #would be const if it could
+TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "0"}
 WHITESPACE = {" ", "\t", "\n"}
 def Lex(str_in):
     out = []
