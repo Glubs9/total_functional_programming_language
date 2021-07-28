@@ -7,7 +7,6 @@ from functools import reduce
 def func_call_gen(arr_in):
     if len(arr_in) == 1: return arr_in
     elif len(arr_in) == 0: return []
-    #if all(map(lambda n: len(n) <= 1, arr_in)): return list(reversed(arr_in))
     return reduce(lambda a,b: a+b, 
         reversed(list(
             map(func_call_gen, arr_in[2])
