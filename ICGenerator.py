@@ -4,6 +4,7 @@ from functools import reduce
 
 #note: I haven't thought about how to unify on stack based code but it would probably work?
 
+#this is a little dense but a little clever isn't it
 def func_call_gen(arr_in):
     if len(arr_in) == 1: return arr_in
     elif len(arr_in) == 0: return []
