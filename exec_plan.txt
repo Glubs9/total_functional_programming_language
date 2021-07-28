@@ -1,0 +1,2 @@
+I think we could probably convert to stack based notation, so that we can more easily build an
+execution stack for asynchronous execution.

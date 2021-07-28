@@ -50,7 +50,7 @@ def build_function(func_call):
     brack_type = brack_name[func_call[1]]
     func_name = func_call[0]
     arguments = [build_function(n) for n in split_comma_on_top(func_call)]
-    return [brack_type, func_name, *arguments]
+    return (brack_type, func_name, arguments)
 
 def build_tree(li):
     #error check here later
