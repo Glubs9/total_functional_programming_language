@@ -6,13 +6,11 @@ from functools import reduce
 
 #this is a little dense but a little clever isn't it
 def func_call_gen(arr_in):
-    if len(arr_in) == 1: return arr_in
-    elif len(arr_in) == 0: return []
-    return reduce(lambda a,b: a+b, 
-        reversed(list(
-            map(func_call_gen, arr_in[2])
-        ))) \
-        + [(arr_in[0], arr_in[1])]
+    if len(arr_in) <= 1: return arr_in
+    return [(arr_in[0], arr_in[1])] + \
+        reduce(lambda a,b: a+b, list(
+                map(func_call_gen, arr_in[2])
+        ))
 
 #maybe change this later?
 def stackify_line(line_in):
