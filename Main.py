@@ -10,7 +10,4 @@ def Run(str_in):
 
 test_str = "plus(0, b) = b; plus(s[a], b) = s[plus(a, b)]; main() = plus(s[s[s[0]]], s[s[0]]);"
 print(test_str + "\n")
-for n in Run(test_str):
-    for i in n:
-        print(i)
-    print()
+Run(test_str)

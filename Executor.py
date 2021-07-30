@@ -40,17 +40,17 @@ def unify(definition, args):
     out = []
     for n in definition: #could zip to ensure one loop
         tmp = unify_single(n, args.pop())
-        if not tmp: return False
-        out.append(tmp)
+        if tmp == False: return False
+        out += tmp
     if out == []: return False
     return out
 
 #not pure
 def unify_single(definition, arg):
-    if type(definition) is not tuple or type(arg) is not tuple: return (definition, arg)
-    elif type(definition) is not tuple: return False
-    elif type(arg) is not tuple: return False
-    return unify_single(definition[2], arg[2])
+    if definition == "0" and arg == "0": return []
+    elif type(arg) is not tuple: return [(definition, arg)] #check for non-snytacitcal definition
+    elif definition[]
+    else: return unify_single(definition[2], arg[2])
 
 #have to match the correct case and return the right function
 def match_function(func_name, arguments):
@@ -80,9 +80,13 @@ def call_user_defined_func(func_name):
     for n in function[1]:
         call_stack.append((scope, n))
 
+def var_in_scope(func_name, scope):
+    print("testing var with sope + " + str(scope))
+
 def call_func(func_name, scope): #although this function is simple, writing any more would be a violation of single function single responsibility
     #check for func_name in scope
-    if func_name in stdlib: call_stdlib(func_name)
+    if var_in_scope(func_name, scope): handle_var(func_name, scope)
+    elif func_name in stdlib: call_stdlib(func_name)
     else: call_user_defined_func(func_name)
 
 def run():
@@ -98,7 +102,7 @@ def run():
         print("")
         tmp = call_stack.pop()
         if type(tmp[1]) is not tuple: #sometimes I push to the stack the literal name cause i'm layz, this needs to be re-written
-            call_func(tmp[1], tmp[0]) #call stack on't be linear like this
+            call_func(tmp[1], tmp[0])
         else:
             call_func(tmp[1][1], tmp[0])
         it+=1
@@ -107,11 +111,3 @@ def Execute(IC):
     define_functions(IC)
     call_func("main", [])
     run()
-    print("call stack")
-    for n in call_stack:
-        print(n)
-    print("data stack")
-    for n in data_stack:
-        print(n)
-    print()
-    print(global_scope["plus"])
