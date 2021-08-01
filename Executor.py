@@ -149,3 +149,4 @@ def Execute(IC):
     define_functions(IC)
     call_func("main", [])
     run()
+    return data_stack[0]

@@ -1,0 +1,4 @@
+plus(0, b) = b;
+plus(s[a], b) = s[plus(a, b)];
+
+main() = plus(s[s[0]], s[s[s[0]]]);

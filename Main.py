@@ -1,14 +1,18 @@
 from Lexer import Lex
 from Parser import Parse
 from ICGenerator import Generate_IC
-from Executor import Execute
+from Executor import Data, Execute
 
 def Run(str_in):
     tmp = Generate_IC(Parse(Lex(str_in)))
-    Execute(tmp)
-    return tmp
+    return Execute(tmp)
 
-test_str = "plus(0, b) = b; plus(s[a], b) = s[plus(a, b)]; main() = plus(s[s[s[0]]], s[s[0]]);"
-test_str2 = "id(a) = a; main() = id(s[s[0]]);"
+def depth(inp):
+    if inp.name == "0": return 1
+    else: return max(map(lambda n: n+1, map(depth, inp.data)))
+
+test_str = open("test.tfpl", "r").read()
 print(test_str + "\n")
-Run(test_str)
+out = Run(test_str)
+print(out)
+print(depth(out))
