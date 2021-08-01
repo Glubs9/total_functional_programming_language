@@ -9,4 +9,7 @@ power(s[a], b) = multiply(b, power(a, b));
 
 pred(s[a]) = a;
 
-main() = pred(s[s[s[0]]]);
+minus(b, 0) = b;
+minus(s[b], s[a]) = minus(b, a);
+
+main() = minus(s[s[s[0]]], s[s[0]]);
