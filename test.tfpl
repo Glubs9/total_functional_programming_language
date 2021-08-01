@@ -1,4 +1,7 @@
 plus(0, b) = b;
 plus(s[a], b) = s[plus(a, b)];
 
-main() = plus(s[s[0]], s[s[s[0]]]);
+multiply(0, b) = 0;
+multiply(s[a], b) = plus(b, multiply(a, b));
+
+main() = multiply(s[s[0]], s[s[s[0]]]);
