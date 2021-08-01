@@ -1,19 +1,13 @@
-#todo:
-    #chnage from tuple rpresentation to oo rep
-        #cause i think a lot of the current bugs comes fomr not understanding the structure
-        #it's pretty unreadable
-        #screw it for now though hey?
-
 from collections import defaultdict
 
 global_scope = defaultdict(lambda: [])
 
 class Function:
-    def __init__(self, argments, definition): #add type signature
+    def __init__(self, arguments, definition): #add type signature
         self.arguments = arguments
         self.definition = definition
     def __str__(self):
-        return "function: " + str(argments) + " : " + str(definition)
+        return "function: " + " ,".join(map(str, self.arguments)) + " : " + str(self.definition)
 
 class Data:
     def __init__(self, name, data):
@@ -34,7 +28,7 @@ def construct_args(args_in):
 
 def define_functions(IC):
     for n in IC: 
-        global_scope[n[1][0][1]].append(Function((construct_args(n[1]), n[2])))
+        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2]))
 
 call_stack = [] #i'm not too happy with stack being a global variable but I will change it later
 data_stack = []
@@ -52,39 +46,44 @@ def call_stdlib(func_name):
     #check for successful unification
 #TODO: fix this
 def unify(definition, args):
+    print("unification with the following" + " ,".join(map(str, definition)) + " with scope " + " ,".join(map(str, args)))
     if definition == [] and args == []: return []
     if len(definition) != len(args): return False
     out = []
     for n in definition: #could zip to ensure one loop
         tmp = unify_single(n, args.pop())
         if tmp == False: return False
-        out += tmp
-    if out == []: return False
+        elif tmp == []: continue
+        out.append(tmp)
     return out
 
 #not pure
 def unify_single(definition, arg):
-    if definition.name == "0" and arg.name == "0": return []
-    elif arg.name != "s": return [(definition, arg)] #check for non-snytacitcal definition
-    elif definition.name == "0": return False
-    else: return unify_single(definition[2], arg[2])
+    if definition.name == "s" and arg.name == "s": return unify_single(definition.data[0], arg.data[0])
+    elif definition.name == "s" and arg.name != "s": return False
+    elif definition.name == "0" and arg.name == "0": return []
+    elif definition.name == "0" and arg.name != "0": return False
+    elif definition.name != "s": return (definition.name, arg) #check for non-snytacitcal definition
+    else: raise Exception("how did we get here?")
 
 #have to match the correct case and return the right function
 def match_function(func_name, arguments):
     #check for empty function call
     #iterate through function definitions until correct case found
     definitions = global_scope[func_name]
-    if len(definitions) == 1 and len(definitions[0][0]) == 0: #no arguments (maybe check argument length)
+    if len(definitions) == 1 and arg_count(func_name) == 0: #no arguments (maybe check argument length)
         return [], definitions[0]
     for n in definitions:
-        tmp = unify(n[0], arguments)
-        if tmp != False: return tmp, n[0]
+        tmp_args = [n for n in arguments]
+        tmp = unify(n.arguments, tmp_args)
+        if tmp != False: return tmp, n
     print("no matching function found")
     raise Exception("branch not found yet")
 
 def arg_count(func_name):
     print("getting argument count with func " + str(func_name))
     tmp = global_scope[func_name][0] #assuming all functions have same arity
+    print("function is " + str(tmp))
     return len(tmp.arguments)
 
 def call_user_defined_func(func_name):
@@ -92,13 +91,26 @@ def call_user_defined_func(func_name):
     for n in range(arg_count(func_name)):
         arguments.append(data_stack.pop())
     scope, function = match_function(func_name, arguments) #can we do this?
+    print("in call user defined func" + str(function.definition))
     for n in function.definition:
+        print("pushing to call_stack " + str((scope, n)))
         call_stack.append((scope, n))
 
-def var_in_scope(func_name, scope):
-    print("testing var with sope + " + str(scope))
+#could with replac with any call
+def var_in_scope(name, scope):
+    print("testing var with scope + " + str(scope))
+    for n in scope: 
+        if n[0] == name: return True
+    return False
+
+def handle_var(name, scope):
+    for n in scope: 
+        if n[0] == name: data_stack.append(n[1])
 
 def call_func(func_name, scope): #although this function is simple, writing any more would be a violation of single function single responsibility
+    print()
+    print("calling function " + func_name + " with scope " + " ,".join(map(str, scope)))
+    print()
     #check for func_name in scope
     if var_in_scope(func_name, scope): handle_var(func_name, scope)
     elif func_name in stdlib: call_stdlib(func_name)
@@ -115,12 +127,23 @@ def run():
         for n in data_stack:
             print(n)
         print("")
+        it+=1
+
         tmp = call_stack.pop()
-        if type(tmp[1]) is not tuple: #sometimes I push to the stack the literal name cause i'm layz, this needs to be re-written
+        print("tmp is = " + str(tmp))
+        if type(tmp[1]) is str: #yikes I need to fix this
             call_func(tmp[1], tmp[0])
         else:
             call_func(tmp[1][1], tmp[0])
-        it+=1
+
+    print("finished!")
+    print("call_stack")
+    for n in call_stack:
+        print(n)
+    print("data_stack")
+    for n in data_stack:
+        print(n)
+    print("")
 
 def Execute(IC):
     define_functions(IC)

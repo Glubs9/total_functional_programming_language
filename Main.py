@@ -9,5 +9,6 @@ def Run(str_in):
     return tmp
 
 test_str = "plus(0, b) = b; plus(s[a], b) = s[plus(a, b)]; main() = plus(s[s[s[0]]], s[s[0]]);"
+test_str2 = "id(a) = a; main() = id(s[s[0]]);"
 print(test_str + "\n")
 Run(test_str)
