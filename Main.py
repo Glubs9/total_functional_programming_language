@@ -8,7 +8,7 @@ def Run(str_in):
     return Execute(tmp)
 
 def depth(inp):
-    if inp.name == "0": return 1
+    if inp.name == "0": return 0
     else: return max(map(lambda n: n+1, map(depth, inp.data)))
 
 test_str = open("test.tfpl", "r").read()
