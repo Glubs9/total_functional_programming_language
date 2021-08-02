@@ -13,4 +13,8 @@ pred(s[a]) = a;
 minus(b, 0) = b;
 minus(s[b], s[a]) = minus(b, a);
 
-main() = plus(s[s[s[0]]], s[s[0]]);
+ack{0, n} = s[n];
+ack{s[m], 0} = ack{m, s[0]};
+ack{s[m], s[n]} = ack{m, ack{s[m], n}};
+
+main() = ack{s[s[s[0]]], s[s[0]]};
