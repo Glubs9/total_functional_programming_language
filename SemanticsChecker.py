@@ -1,3 +1,5 @@
+#jeezus this file is a mess
+
 from sys import exit
 
 #just checks that primitive functions are primitive
@@ -37,6 +39,8 @@ def find_data(defin):
     tmp = [n[1] for n in _find_data(defin)]
     return tmp
 
+#specifically this function is a mess
+    #it recurses through trying to capture the final data depth before a function call.
 def _find_data(defin):
     if type(defin) is not tuple: return [(True, defin)]
     recs = list(map(_find_data, defin[2]))

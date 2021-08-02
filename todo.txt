@@ -1,4 +1,0 @@
-add comments
-boolean functions probably aren't worth it until later on
-	- maybe like using 0 and not 0 but whatever. later on we do this with algebraic types but
-	not now
