@@ -17,4 +17,7 @@ ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
-main() = ack{s[s[s[0]]], s[s[0]]};
+half(0) = 0;
+half(s[a]) = s[half(pred(a))];
+
+main() = half(s[s[s[s[s[0]]]]]);
