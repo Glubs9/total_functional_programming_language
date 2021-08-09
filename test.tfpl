@@ -1,3 +1,6 @@
+atotal(0) = 0;
+atotal(s[a]) = atotal(a);
+
 plus(0, b) = b;
 plus(s[a], b) = s[plus(a, b)];
 
@@ -20,4 +23,7 @@ ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 half(0) = 0;
 half(s[a]) = s[half(pred(a))];
 
-main{} = ack(s[s[s[0]]], s[s[0]]);
+minus_two(s[s[a]]) = a;
+test2(s[0]) = 0;
+
+main{} = plus(s[s[0]], s[s[s[0]]]);
