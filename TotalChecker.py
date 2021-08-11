@@ -1,3 +1,5 @@
+#my total checker is still naive
+
 from itertools import groupby
 from sys import exit
 from collections import defaultdict
@@ -49,7 +51,7 @@ def check_args(args):
     elif len(args[0]) == 0: return True #no arguments (might end up being the above)
 
     #check first arg
-    first_args = list(map(lambda n: n[0], arg))
+    first_args = list(map(lambda n: n[0], args))
     if not check_arg(first_args): return False
     if len(args[0]) == 1: return True
 
@@ -68,9 +70,9 @@ def check_arg(arg):
     if len(zeros) == 0: return False
     elif len(zeros) == len(arg): return False #only zero cases
     non_zeros = filter(lambda n: type(n) is tuple, arg) #similar to get args with name but with tuples
-    non_zeros_less = list(map(lambda n: n[2][0]))
+    non_zeros_less = list(map(lambda n: n[2][0], non_zeros))
     if check_arg(non_zeros_less): return True
     return False #maybe raise exception
 
 def get_args_with_name(arg, name):
-    return list(filter(lambda n: n==name, arg))
+    return list(filter(lambda n: n[0]==name, arg)) #[0] as args are lists

@@ -11,10 +11,10 @@ pred(0) = 0;
 pred(s[a]) = a;
 
 minus(b, 0) = b;
-minus(s[b], s[a]) = minus(b, a);
+minus(b, s[a]) = pred(minus(b, a));
 
 ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
-main{} = plus(s[s[0]], s[s[s[0]]]);
+main{} = minus(s[s[s[0]]], s[s[0]]);
