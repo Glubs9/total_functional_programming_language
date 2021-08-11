@@ -21,5 +21,6 @@ def depth(inp):
 test_str = open("test.tfpl", "r").read()
 print(test_str + "\n")
 out = Run(test_str)
+print("and the output of running main is: ")
 print(out)
 print(depth(out))
