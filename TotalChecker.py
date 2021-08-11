@@ -1,4 +1,5 @@
 #my total checker is still naive
+    #but it works for now tbh
 
 from itertools import groupby
 from sys import exit
@@ -6,14 +7,10 @@ from collections import defaultdict
 
 def Total_Checker(functions):
     gf = group_functions(functions)
-    it = 0
     for key, val in gf:
-        it+=1
-        print("checking function " + str(key))
         if not check_func(list(val)):
             print("error: function \"".upper() + str(key) + "\" is not total".upper())
             exit()
-    print("amount of functions checked " + str(it))
     return functions
     
 def group_functions(functions):
