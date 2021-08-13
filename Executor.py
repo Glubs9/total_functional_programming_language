@@ -30,15 +30,12 @@ def define_functions(IC):
     for n in IC: 
         global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2]))
 
-call_stack = [] #i'm not too happy with stack being a global variable but I will change it later
-data_stack = []
-
 stdlib = {
-        "0": lambda: data_stack.append(Data('0', [])), 
-        "s": lambda: data_stack.append(Data("s", [data_stack.pop()]))
+        "0": lambda s: s.data_stack.append(Data('0', [])), 
+        "s": lambda s: s.data_stack.append(Data("s", [s.data_stack.pop()]))
 }
-def call_stdlib(func_name):
-    stdlib[func_name]()
+def call_stdlib(func_name, stack):
+    stdlib[func_name](stack)
 
 #restricted set unification (the passed arguments must be literals)
     #hadcoded for now but will be fixed later
@@ -86,15 +83,15 @@ def arg_count(func_name):
     print("function is " + str(tmp))
     return len(tmp.arguments)
 
-def call_user_defined_func(func_name):
+def call_user_defined_func(func_name, stack):
     arguments = []
     for n in range(arg_count(func_name)):
-        arguments.append(data_stack.pop())
+        arguments.append(stack.data_stack.pop())
     scope, function = match_function(func_name, arguments) #can we do this?
     print("in call user defined func" + str(function.definition))
     for n in function.definition:
         print("pushing to call_stack " + str((scope, n)))
-        call_stack.append((scope, n))
+        stack.call_stack.append((scope, n))
 
 #could with replac with any call
 def var_in_scope(name, scope):
@@ -103,18 +100,18 @@ def var_in_scope(name, scope):
         if n[0] == name: return True
     return False
 
-def handle_var(name, scope):
+def handle_var(name, scope, stack):
     for n in scope: 
-        if n[0] == name: data_stack.append(n[1])
+        if n[0] == name: stack.data_stack.append(n[1])
 
-def call_func(func_name, scope): #although this function is simple, writing any more would be a violation of single function single responsibility
+def call_func(func_name, scope, stack): #although this function is simple, writing any more would be a violation of single function single responsibility
     print()
     print("calling function " + func_name + " with scope " + " ,".join(map(str, scope)))
     print()
     #check for func_name in scope
-    if var_in_scope(func_name, scope): handle_var(func_name, scope)
-    elif func_name in stdlib: call_stdlib(func_name)
-    else: call_user_defined_func(func_name)
+    if var_in_scope(func_name, scope): handle_var(func_name, scope, stack)
+    elif func_name in stdlib: call_stdlib(func_name, stack)
+    else: call_user_defined_func(func_name, stack)
 
 #should and probably could move stack stuff to separate file
     #also follow the advice that if a class is a constructor and a method than it doesn't need to be a class
@@ -150,35 +147,41 @@ def destroy_stack(pos):
 
 def run():
     it = 1
-    while (call_stack != []):
+    i = 0
+    while (stacks[i].call_stack != []):
         print("it am = " + str(it))
         print("call_satck")
-        for n in call_stack:
+        for n in stacks[i].call_stack:
             print(n)
         print("data_stack")
-        for n in data_stack:
+        for n in stacks[i].data_stack:
             print(n)
         print("")
         it+=1
 
-        tmp = call_stack.pop()
+        tmp = stacks[i].call_stack.pop()
         print("tmp is = " + str(tmp))
         if type(tmp[1]) is str: #yikes I need to fix this
-            call_func(tmp[1], tmp[0])
+            call_func(tmp[1], tmp[0], stacks[i])
         else:
-            call_func(tmp[1][1], tmp[0])
+            call_func(tmp[1][1], tmp[0], stacks[i])
+
+        i+=1
+        if i >= len(stacks): i = 0
 
     print("finished!")
     print("call_stack")
-    for n in call_stack:
+    for n in stacks[0].call_stack:
         print(n)
     print("data_stack")
-    for n in data_stack:
+    for n in stacks[0].data_stack:
         print(n)
     print("")
 
 def Execute(IC):
     define_functions(IC)
-    call_func("main", [])
+    s = Stack([], [])
+    stacks.append(s)
+    call_func("main", [], s)
     run()
-    return data_stack[0]
+    return s.data_stack[0] #IMPORTANT: CHANGE LATER
