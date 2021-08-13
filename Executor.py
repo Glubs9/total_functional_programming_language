@@ -116,6 +116,38 @@ def call_func(func_name, scope): #although this function is simple, writing any 
     elif func_name in stdlib: call_stdlib(func_name)
     else: call_user_defined_func(func_name)
 
+#should and probably could move stack stuff to separate file
+    #also follow the advice that if a class is a constructor and a method than it doesn't need to be a class
+    #i feel it doesn't apply cause this is readability
+#TODO:
+    #integrate stacks array back into the rest of the code
+    #then handle the creation and destruction of stacks
+class Stack:
+    def __init__(self, call_stack, data_stack, destroy_pos=None):
+        self.call_stack = call_stack
+        self.data_stack = data_stack
+        self.destroy_pos = destroy_pos
+    def destroy(self):
+        if self.destroy_pos == None: return []
+        else: return [self.destroy_pos] + stacks[self.destroy_pos].destroy()
+
+stacks = []
+
+def new_stack(stack):
+    for n in stacks: #ugh i have to use a for loop instead of map cause impurities
+        n.destroy_pos+=1
+    stacks.insert(0, stack)
+
+def destroy_stack(pos):
+    destroy_posses = set([pos] + stacks[pos].destroy())
+    change_am = 0
+    for n in range(0, len(stacks), -1):
+        if n in destroy_posses:
+            change_am+=1
+            stacks.pop(n)
+        else:
+            stacks[n].destroy_pos-=change_am
+
 def run():
     it = 1
     while (call_stack != []):

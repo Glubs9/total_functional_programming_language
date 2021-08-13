@@ -12,3 +12,8 @@ for main run function
 NOTE: I would love to have this as a separated part of the code but it doesn't seem reasonable to do
 so
 	- maybe in the scope class as a separate file
+
+also for total function we need to write a thing that when a total function is called with bottom
+then it works as id.
+	- we needt to allow them to manually handle bottom if we want, what symbol do we use?
+		- i'm inclined toward !
