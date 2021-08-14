@@ -9,9 +9,7 @@ import sys
 def Run(str_in):
     tmp = Generate_IC(Semantics_Checker(Parse(Lex(str_in))))
     #supress execute output
-    sys.stdout = None
     tmp2 = Execute(tmp)
-    sys.stdout = sys.__stdout__
     return tmp2
 
 def depth(inp):

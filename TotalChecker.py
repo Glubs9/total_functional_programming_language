@@ -1,5 +1,4 @@
-#my total checker is still naive
-    #but it works for now tbh
+
 
 from itertools import groupby
 from sys import exit

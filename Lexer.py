@@ -4,7 +4,7 @@ def append_not_empty(li, string):
     if string != "":
         li.append(string)
 
-TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "0"}
+TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "0", "!"}
 WHITESPACE = {" ", "\t", "\n"}
 def Lex(str_in):
     #maybe shouldn't go here but I don't really see another place to put it

@@ -1,13 +1,15 @@
 from collections import defaultdict
+from sys import exit
 
 global_scope = defaultdict(lambda: [])
 
 class Function:
-    def __init__(self, arguments, definition): #add type signature
+    def __init__(self, arguments, definition, primitive): #add type signature
         self.arguments = arguments
         self.definition = definition
+        self.primitive = primitive #boolean to tell if function is primitive or not
     def __str__(self):
-        return "function: " + " ,".join(map(str, self.arguments)) + " : " + str(self.definition)
+        return "function: " + " ,".join(map(str, self.arguments)) + " : " + str(self.definition) + " is " + str(self.primitive)
 
 class Data:
     def __init__(self, name, data):
@@ -28,22 +30,29 @@ def construct_args(args_in):
 
 def define_functions(IC):
     for n in IC: 
-        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2]))
+        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0])) #this is why we have to change from using tuples to objects (or tagged unions but they don't exist in python yet)
+
+def id_print(s):
+    tmp = s.data_stack.pop()
+    print("id print called with " + str(tmp))
+    s.data_stack.append(tmp)
 
 stdlib = {
+        "id": lambda s: None, #id doesn't affect the stack so nothing happens (maybe change later)
         "0": lambda s: s.data_stack.append(Data('0', [])), 
-        "s": lambda s: s.data_stack.append(Data("s", [s.data_stack.pop()]))
+        "s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
+        "!": lambda s: s.data_stack.append(Data('!', [])),
+        "destroy": lambda s: destroy_stack(s.destroy_pos),
+        "print": id_print
 }
 def call_stdlib(func_name, stack):
+    if len(stack.data_stack) != 0:
+        tmp = stack.data_stack.pop()
+        stack.data_stack.append(tmp)
+        if tmp.name == "!": return
     stdlib[func_name](stack)
 
-#restricted set unification (the passed arguments must be literals)
-    #hadcoded for now but will be fixed later
-    #args is fully constructed at this point
-    #check for successful unification
-#TODO: fix this
 def unify(definition, args):
-    print("unification with the following" + " ,".join(map(str, definition)) + " with scope " + " ,".join(map(str, args)))
     if definition == [] and args == []: return []
     if len(definition) != len(args): return False
     out = []
@@ -55,13 +64,16 @@ def unify(definition, args):
     return out
 
 #not pure
+    #hardcoded :(
 def unify_single(definition, arg):
     if definition.name == "s" and arg.name == "s": return unify_single(definition.data[0], arg.data[0])
     elif definition.name == "s" and arg.name != "s": return False
     elif definition.name == "0" and arg.name == "0": return []
     elif definition.name == "0" and arg.name != "0": return False
+    elif definition.name == "!" and arg.name == "!": return [] #have to specify that you unify with bottom
+    elif definition.name == "!" and arg.name != "!": return False
     elif definition.name != "s": return (definition.name, arg) #check for non-snytacitcal definition
-    else: raise Exception("how did we get here?")
+    else: raise Exception("how did i get here?")
 
 #have to match the correct case and return the right function
 def match_function(func_name, arguments):
@@ -71,16 +83,13 @@ def match_function(func_name, arguments):
     if len(definitions) == 1 and arg_count(func_name) == 0: #no arguments (maybe check argument length)
         return [], definitions[0]
     for n in definitions:
-        tmp_args = [n for n in arguments]
+        tmp_args = [n for n in arguments] #copying to avoid side affects
         tmp = unify(n.arguments, tmp_args)
         if tmp != False: return tmp, n
-    print("no matching function found")
-    raise Exception("branch not found yet")
+    return False, False #yikes, but what are you gonna do i guess
 
 def arg_count(func_name):
-    print("getting argument count with func " + str(func_name))
     tmp = global_scope[func_name][0] #assuming all functions have same arity
-    print("function is " + str(tmp))
     return len(tmp.arguments)
 
 def call_user_defined_func(func_name, stack):
@@ -88,14 +97,17 @@ def call_user_defined_func(func_name, stack):
     for n in range(arg_count(func_name)):
         arguments.append(stack.data_stack.pop())
     scope, function = match_function(func_name, arguments) #can we do this?
-    print("in call user defined func" + str(function.definition))
+    if scope == False and len(list(filter(lambda n: n.name=="!", arguments))) != 0: #if bottom passed as an argument and not matched
+        stack.data_stack.append(Data("!", [])) #i can't remember how to make a function so i just did this
+        return
+    if scope == False:
+        print("failed to match function " + str(func_name) + " with arguments " + str(list(map(str, arguments)))) #string call superfluous
+        exit()
     for n in function.definition:
-        print("pushing to call_stack " + str((scope, n)))
-        stack.call_stack.append((scope, n))
+        stack.call_stack.append((scope, n, function.primitive))
 
 #could with replac with any call
 def var_in_scope(name, scope):
-    print("testing var with scope + " + str(scope))
     for n in scope: 
         if n[0] == name: return True
     return False
@@ -105,9 +117,6 @@ def handle_var(name, scope, stack):
         if n[0] == name: stack.data_stack.append(n[1])
 
 def call_func(func_name, scope, stack): #although this function is simple, writing any more would be a violation of single function single responsibility
-    print()
-    print("calling function " + func_name + " with scope " + " ,".join(map(str, scope)))
-    print()
     #check for func_name in scope
     if var_in_scope(func_name, scope): handle_var(func_name, scope, stack)
     elif func_name in stdlib: call_stdlib(func_name, stack)
@@ -127,13 +136,15 @@ class Stack:
     def destroy(self):
         if self.destroy_pos == None: return []
         else: return [self.destroy_pos] + stacks[self.destroy_pos].destroy()
+    def clone(self):
+        return Stack([n for n in self.call_stack], [n for n in self.data_stack])
 
 stacks = []
 
 def new_stack(stack):
     for n in stacks: #ugh i have to use a for loop instead of map cause impurities
         n.destroy_pos+=1
-    stacks.insert(0, stack)
+    stacks.insert(0, stack.clone())
 
 def destroy_stack(pos):
     destroy_posses = set([pos] + stacks[pos].destroy())
@@ -145,11 +156,10 @@ def destroy_stack(pos):
         else:
             stacks[n].destroy_pos-=change_am
 
-def run():
-    it = 1
-    i = 0
-    while (stacks[i].call_stack != []):
-        print("it am = " + str(it))
+def debug_stacks(stacks, it_am):
+    print("it am = " + str(it_am))
+    for i in range(len(stacks)):
+        print("for stack " + str(i))
         print("call_satck")
         for n in stacks[i].call_stack:
             print(n)
@@ -157,17 +167,30 @@ def run():
         for n in stacks[i].data_stack:
             print(n)
         print("")
-        it+=1
+    print("")
 
+def run():
+    it = 1
+    i = 0
+    while (stacks[i].call_stack != []):
+        #write better debug function for multiple stacks
+        it+=1
         tmp = stacks[i].call_stack.pop()
-        print("tmp is = " + str(tmp))
         if type(tmp[1]) is str: #yikes I need to fix this
             call_func(tmp[1], tmp[0], stacks[i])
         else:
+            if tmp[2] == "primitive" and tmp[1][0] == "non-primitive":
+                new_stack(stacks[i])
+                #handle removing args from old stack, for this function
+                stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
+                i+=1
+                stacks[i].destroy_pos = 0 #should never cause out of bounds error cause stacks added to start of list
+                stacks[i].call_stack.append(([], ("primitive", "destroy"), "primitive"))
             call_func(tmp[1][1], tmp[0], stacks[i])
 
         i+=1
         if i >= len(stacks): i = 0
+        debug_stacks(stacks, it)
 
     print("finished!")
     print("call_stack")
@@ -180,7 +203,7 @@ def run():
 
 def Execute(IC):
     define_functions(IC)
-    s = Stack([], [])
+    s = Stack([], [], False)
     stacks.append(s)
     call_func("main", [], s)
     run()
