@@ -37,14 +37,26 @@ def id_print(s):
     print("id print called with " + str(tmp))
     s.data_stack.append(tmp)
 
+def destroy(s):
+    destroy_stack(s.destroy_pos)
+
 stdlib = {
         "id": lambda s: None, #id doesn't affect the stack so nothing happens (maybe change later)
         "0": lambda s: s.data_stack.append(Data('0', [])), 
         "s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
         "!": lambda s: s.data_stack.append(Data('!', [])),
-        "destroy": lambda s: destroy_stack(s.destroy_pos),
+        "destroy": destroy,
         "print": id_print
 }
+stdlib_args = {
+        "id": 1, #kinda? not in the implementation but in the theory or something
+        "0": 0,
+        "s": 1,
+        "!": 0,
+        "destroy": 0,
+        "print": 1
+}
+
 def call_stdlib(func_name, stack):
     if len(stack.data_stack) != 0:
         tmp = stack.data_stack.pop()
@@ -89,8 +101,13 @@ def match_function(func_name, arguments):
     return False, False #yikes, but what are you gonna do i guess
 
 def arg_count(func_name):
-    tmp = global_scope[func_name][0] #assuming all functions have same arity
-    return len(tmp.arguments)
+    if func_name in global_scope:
+        tmp = global_scope[func_name][0] #assuming all functions have same arity
+        return len(tmp.arguments)
+    elif func_name in stdlib:
+        return stdlib_args[func_name]
+    else:
+        raise Exception("unknown fuction called " + str(func_name))
 
 def call_user_defined_func(func_name, stack):
     arguments = []
@@ -149,7 +166,7 @@ def new_stack(stack):
 def destroy_stack(pos):
     destroy_posses = set([pos] + stacks[pos].destroy())
     change_am = 0
-    for n in range(0, len(stacks), -1):
+    for n in reversed(range(0, len(stacks))):
         if n in destroy_posses:
             change_am+=1
             stacks.pop(n)
@@ -177,11 +194,14 @@ def run():
         it+=1
         tmp = stacks[i].call_stack.pop()
         if type(tmp[1]) is str: #yikes I need to fix this
+            #NEED TO ADD PRIMITIVE \ NONPRIMITVE CHECKING \ WE NEED TO FIX THIS \ DO THIS NEXT
             call_func(tmp[1], tmp[0], stacks[i])
         else:
             if tmp[2] == "primitive" and tmp[1][0] == "non-primitive":
                 new_stack(stacks[i])
                 #handle removing args from old stack, for this function
+                ac = arg_count(tmp[1][1])
+                [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
                 stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
                 i+=1
                 stacks[i].destroy_pos = 0 #should never cause out of bounds error cause stacks added to start of list
@@ -193,13 +213,7 @@ def run():
         debug_stacks(stacks, it)
 
     print("finished!")
-    print("call_stack")
-    for n in stacks[0].call_stack:
-        print(n)
-    print("data_stack")
-    for n in stacks[0].data_stack:
-        print(n)
-    print("")
+    debug_stacks(stacks, it+1)
 
 def Execute(IC):
     define_functions(IC)

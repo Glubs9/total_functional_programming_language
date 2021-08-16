@@ -17,13 +17,8 @@ ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
-test(a) = a;
-test2{a} = test(a);
+test2{a} = a;
+test3(0, b) = 0;
+test3(s[a], b) = id(id(id(test2{a}, b)));
 
-test3{a} = a;
-test4(0) = 0;
-test4(s[a]) = s[test4(a)];
-test5(0) = 0;
-test5(s[a]) = test4(test3{a});
-
-main{} = test5(s[s[s[s[0]]]]);
+main{} = test3(s[s[s[s[0]]]], s[s[0]]);
