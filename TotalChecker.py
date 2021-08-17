@@ -1,5 +1,3 @@
-
-
 from itertools import groupby
 from sys import exit
 from collections import defaultdict
@@ -35,6 +33,8 @@ def check_func(functions):
 def generic_def(arg):
     if type(arg) is tuple:
         return (arg[0], arg[1], [generic_def(arg[2][0])]) #successor
+    elif type(arg) is list and arg[0] == "!":
+        return ["!"]
     elif type(arg) is list and arg[0] == "0":
         return ["0"]
     elif type(arg) is list and type(arg[0]) is str:

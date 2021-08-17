@@ -9,12 +9,13 @@ import sys
 
 def Run(str_in):
     str_in = PreProcess(str_in)
-    tmp = Generate_IC(Semantics_Checker(Parse(Lex(str_in))))
-    #supress execute output
-    tmp2 = Execute(tmp)
-    return tmp2
+    tmp = Parse(Lex(str_in))
+    tmp = Generate_IC(Semantics_Checker(tmp))
+    tmp = Execute(tmp)
+    return tmp
 
 def depth(inp):
+    if inp.name == "!": return -1
     if inp.name == "0": return 0
     else: return max(map(lambda n: n+1, map(depth, inp.data)))
 

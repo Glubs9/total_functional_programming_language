@@ -21,4 +21,7 @@ test2{a} = a;
 test3(0, b) = 0;
 test3(s[a], b) = id(id(id(test2{a}, b)));
 
-main{} = test3(s[s[s[s[0]]]], s[s[0]]);
+test(!) = !;
+test(a) = a;
+
+main{} = test(!);
