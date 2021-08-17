@@ -5,3 +5,4 @@
 		i. i think this defeats the whole point but something idk
 6. write bottom checker
 7. check that there is no data constructors with ! at the bottom
+8. add file loader
