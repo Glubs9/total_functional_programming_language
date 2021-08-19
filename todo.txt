@@ -3,5 +3,3 @@
 5. see if you can handle something about exiting
 	a. maybe i can write like a subroutine in the code that doesn't exist on !
 		i. i think this defeats the whole point but something idk
-6. write bottom checker
-7. check that there is no data constructors with ! at the bottom
