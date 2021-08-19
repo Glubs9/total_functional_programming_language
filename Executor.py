@@ -187,11 +187,11 @@ def debug_stacks(stacks, it_am):
     print("")
 
 def run():
-    it = 1
+    #it = 1 #for debugging
+
     i = 0
     while (stacks[i].call_stack != []):
         #write better debug function for multiple stacks
-        it+=1
         tmp = stacks[i].call_stack.pop()
         if type(tmp[1]) is str: #yikes I need to fix this
             #NEED TO ADD PRIMITIVE \ NONPRIMITVE CHECKING \ WE NEED TO FIX THIS \ DO THIS NEXT
@@ -210,15 +210,20 @@ def run():
 
         i+=1
         if i >= len(stacks): i = 0
-        debug_stacks(stacks, it)
+
+        #it+=1
+        #debug_stacks(stacks, it)
 
     print("finished!")
-    debug_stacks(stacks, it+1)
+    #debug_stacks(stacks, it+1)
 
-def Execute(IC):
+def Execute(IC, execute=True):
     define_functions(IC)
-    s = Stack([], [], False)
-    stacks.append(s)
-    call_func("main", [], s)
-    run()
-    return s.data_stack[0] #IMPORTANT: CHANGE LATER
+    if execute:
+        s = Stack([], [], False)
+        stacks.append(s)
+        call_func("main", [], s)
+        run()
+        return s.data_stack[0] #IMPORTANT: CHANGE LATER
+    else:
+        return None #little risky so make sure all calls to execute are properly checked
