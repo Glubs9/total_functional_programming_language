@@ -1,5 +1,2 @@
 3. general testing, definitely around splitting and the such
 4. see if you can get that logic programming idea sorted
-5. see if you can handle something about exiting
-	a. maybe i can write like a subroutine in the code that doesn't exist on !
-		i. i think this defeats the whole point but something idk
