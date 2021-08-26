@@ -36,12 +36,12 @@ An example of a main function is in test.tfpl.
 # STDLIB
 this is a list of function within the standard library.    
 <ol>
-	<li> 1. print(a) (prints and returns whatever is passed to it) </li>
-	<li> 1. s[a] (returns the successor of the given argument)</li>
-	<li> 1. plus(a, b) (performs addition on a and b)</li>
-	<li> 1. multiply(a, b) (performs multiplication on a and b)</li>
-	<li> 1. power(a, b) (performs power on a and b, a^b)</li>
-	<li> 1. pred(a) (returns the predecessor of the given function, note: pred(0) = 0)</li>
-	<li> 1. minus(a, b) (returns a-b note: this uses pred so any answer lower than 0 will be 0)</li>
-	<li> 1. ack{a, b} (returns the ackerrman function, this is not too useful but is a good example of a non-primitive function)</li>
+	<li> print(a) (prints and returns whatever is passed to it) </li>
+	<li> s[a] (returns the successor of the given argument)</li>
+	<li> plus(a, b) (performs addition on a and b)</li>
+	<li> multiply(a, b) (performs multiplication on a and b)</li>
+	<li> power(a, b) (performs power on a and b, a^b)</li>
+	<li> pred(a) (returns the predecessor of the given function, note: pred(0) = 0)</li>
+	<li> minus(a, b) (returns a-b note: this uses pred so any answer lower than 0 will be 0)</li>
+	<li> ack{a, b} (returns the ackerrman function, this is not too useful but is a good example of a non-primitive function)</li>
 </ol>
