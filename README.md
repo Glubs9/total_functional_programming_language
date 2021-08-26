@@ -34,7 +34,7 @@ If you would like further examples please refer to stdlib.tfpl.
 An example of a main function is in test.tfpl.    
 
 # STDLIB
-this is a list of function within the standard library.
+this is a list of function within the standard library.    
 	1. print(a) (prints and returns whatever is passed to it)
 	1. s[a] (returns the successor of the given argument)
 	1. plus(a, b) (performs addition on a and b)
