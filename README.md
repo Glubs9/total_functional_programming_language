@@ -6,7 +6,7 @@ To run the program, make sure you have python downloaded and installed. Then dow
 To run any code you write, put in python Main.py [file_name].
 
 # Tutorial
-[Language Design Doc](https://docs.google.com/document/d/1VaQIqCRbHQcMX1CR2NVf0SVfpH9rvEA5TUewIfpVD3I/edit?usp=sharing)
+[Language Design Doc](https://docs.google.com/document/d/1VaQIqCRbHQcMX1CR2NVf0SVfpH9rvEA5TUewIfpVD3I/edit?usp=sharing) <br>
 This language uses unary successor arithmetic (akin to mu-recursive functions). 0 is the base case
 and every number is defined as the successor of 0. Successor is written s[0].                 
 Entry starts at a main function called main.           
