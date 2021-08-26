@@ -23,6 +23,11 @@ What separates primitive and non-primitive functions is that the sum of the prim
 arguments must be greater than the sum of the depth of the arguments functions.         
 the function definition test(s[a], s[b]) = plus(s[a], s[s[b]]) has an argument depth of 2 and
 a definition depth of 3, this would error the program.     
+The other distinguishing feature of primitive functions is that they must be total.
+This means that a primitive function must cover all possible inputs to the function. A non-primitive
+function does not have this restriction. For example the function      
+test(a) = a; does cover all inputs whereas     
+test(s[a]) = a; does not, as it misses the case where the input is 0, in which case it will not match.        
 You can call a non-primitive function within a primitive function even though, conceptually, this
 would create a non-primitive function. This is worked around by the program splitting into two
 branches, one where the non-primitive call immediately returns the bottom value (!) and another

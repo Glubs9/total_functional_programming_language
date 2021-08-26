@@ -1,2 +1,3 @@
 3. general testing, definitely around splitting and the such
 4. see if you can get that logic programming idea sorted
+5. commenting (maybe just chuck stuff after the ;?
