@@ -10,7 +10,6 @@ def Bottom_Checker(funcs):
 
 #i do want to refactor the long if statement below but it is a side effect of the tuple reprsentation so not much can be done?
 def check(code):
-    print("in check with " + str(code))
     if type(code) is not list and type(code) is not tuple: return True
     elif type(code) is list and len(code) == 1: return True
     elif type(code) is tuple and code[0] == "data-constructor" and code[1] == "s" and type(code[2]) is list and len(code[2]) == 1 and len(code[2][0]) == 1 and code[2][0][0] == "!": return False

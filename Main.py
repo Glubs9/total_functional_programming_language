@@ -22,11 +22,11 @@ stdlib_str = open("stdlib.tfpl", "r").read()
 Run(stdlib_str, False)
 
 if len(sys.argv) != 2:
-    print("wrong number of arguments passed")
+    print("wrong number of arguments passed / Please pass a file")
     sys.exit()
 inp_file = open(sys.argv[1]).read()
 out = Run(inp_file)
 
-print("and the output of running main in file " + sys.argv[1] + " is: ")
+print("the output of running main in file " + sys.argv[1] + " is: ")
 print(out)
-print(depth(out))
+print("with a depth of " + str(depth(out)))

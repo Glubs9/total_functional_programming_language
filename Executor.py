@@ -34,7 +34,7 @@ def define_functions(IC):
 
 def id_print(s):
     tmp = s.data_stack.pop()
-    print("id print called with " + str(tmp))
+    print("print called with " + str(tmp))
     s.data_stack.append(tmp)
 
 def destroy(s):
@@ -140,11 +140,6 @@ def call_func(func_name, scope, stack): #although this function is simple, writi
     else: call_user_defined_func(func_name, stack)
 
 #should and probably could move stack stuff to separate file
-    #also follow the advice that if a class is a constructor and a method than it doesn't need to be a class
-    #i feel it doesn't apply cause this is readability
-#TODO:
-    #integrate stacks array back into the rest of the code
-    #then handle the creation and destruction of stacks
 class Stack:
     def __init__(self, call_stack, data_stack, destroy_pos=None):
         self.call_stack = call_stack
