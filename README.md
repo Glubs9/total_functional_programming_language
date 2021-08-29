@@ -42,7 +42,7 @@ this will become more important.
 If you would like further examples please refer to stdlib.tfpl.     
 An example of a main function is in test.tfpl.    
 
-# STDLIB
+#### STDLIB
 this is a list of function within the standard library.    
 <ol>
 	<li> print(a) (prints and returns whatever is passed to it) </li>
