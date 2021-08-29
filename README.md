@@ -7,8 +7,10 @@ To run any code you write, put in python Main.py [file_name].
 
 # Tutorial
 [Language Design Doc](https://docs.google.com/document/d/1VaQIqCRbHQcMX1CR2NVf0SVfpH9rvEA5TUewIfpVD3I/edit?usp=sharing) <br>
+#### data type
 This language uses unary successor arithmetic (akin to mu-recursive functions). 0 is the base case
 and every number is defined as the successor of 0. Successor is written s[0].                 
+#### basic functions
 Entry starts at a main function called main.           
 To define a primitive function the name of the function followed by parenthesis and it's arguments
 are written, after this an equals sign is written and the function definition is written.  I.e: test(a,b ) = a;
@@ -17,6 +19,7 @@ arguments to each function being recursively defined (another function call, var
 You can also pattern match on function arguments with successor calls, i.e: minusone(s[a]) = a;     
 You can also define a function multiple times, where it will call the highest succeeded matching
 definition, ala ml. (see definitions in stdlib.tfpl for examples).     
+#### non-primitive functions
 You can also define non-primitive functions by using curly braces {}. These functions are also
 called with curly braces. Non-primitive functions are defined identically to primitive functions.     
 What separates primitive and non-primitive functions is that the sum of the primitive functions depth of it's
@@ -35,6 +38,7 @@ where the non-primtive call executes as normal. If the normal execution branch f
 bottom value branch finishes, the bottom value branch is deleted and as are all branches it created.
 In practice this does not come up much with purely unary arithmetic. As more functionality is added
 this will become more important. 
+#### examples
 If you would like further examples please refer to stdlib.tfpl.     
 An example of a main function is in test.tfpl.    
 
