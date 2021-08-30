@@ -42,7 +42,8 @@ branches, one where the non-primitive call immediately returns the bottom value 
 where the non-primtive call executes as normal. If the normal execution branch finishes before the
 bottom value branch finishes, the bottom value branch is deleted and as are all branches it created.
 In practice this does not come up much with purely unary arithmetic. As more functionality is added
-this will become more important. 
+this will become more important.
+![graph not found](not_program.png)
 
 #### examples
 If you would like further examples please refer to stdlib.tfpl.     
