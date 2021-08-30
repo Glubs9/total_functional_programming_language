@@ -27,9 +27,10 @@ called with curly braces. Non-primitive functions are defined identically to pri
 What separates primitive and non-primitive functions is that the sum of the primitive functions depth of it's
 arguments must be greater than the sum of the depth of the arguments functions.         
 the function definition test(s[a], s[b]) = plus(s[a], s[s[b]]) has an argument depth of 2 and
-a definition depth of 3, this would error the program.   
+a definition depth of 3, this would error the program.    
 There are some caveats to this though. If a function doesn't call any other function in the output,
-only data constructors like s[a] then depth is not checked.
+only data constructors like s[a] then depth is not checked. (THIS IS CAUSING PROBLEMS, CHANGE LATER).     
+Also, data depth is only calculated at the very bottom level of a call. e.g: s[f(s[x])] has a depth of one.       
 The other distinguishing feature of primitive functions is that they must be total.
 This means that a primitive function must cover all possible inputs to the function. A non-primitive
 function does not have this restriction. For example the function      
