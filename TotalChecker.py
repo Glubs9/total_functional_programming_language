@@ -1,10 +1,5 @@
 #checks that a function covers all possible inputs
-    #this is done recursively.
-    #it first checks if there is a generic case (a variable) at the top level. if there is it returns true
-    #if not it checks for a 0 case, if there is no 0 case it returns false
-    #then it checks that there is a successor case, if there is not it returns false
-    #if there is then it recurses one level deeper in that successor (e.g: s[0] -> 0)
-        #this recursion recurses over all successor cases exist, in case there is a function with more than one
+    #this is done recursively and is fairly complicated. 
 
 from itertools import groupby
 from sys import exit
@@ -36,12 +31,13 @@ def get_args(function):
 
 #check arity of functions are all the same
     #and converts all generic args (a, b, x,..) to be called "generic" to make coding easier and more readable later on
-    #note: this should be moved out of this function at a later date
+        #note: this should be moved out of this function at a later date
 def check_func(functions):
     args = list(map(get_args, functions))
     args = list(map(lambda n: list(map(generic_def, n)), args)) #converts all generic args to the same symbol
     return check_args(args) #might be able to inline
 
+#converts a single function call/definition to have generic arguments
 def generic_def(arg):
     if type(arg) is tuple:
         return (arg[0], arg[1], [generic_def(arg[2][0])]) #successor
@@ -54,9 +50,10 @@ def generic_def(arg):
     else:
         raise Exception("totality checker generic def encountered unknown case")
 
+#main function that checks the arguments are total
 def check_args(args):
     if len(args) == 0: raise Exception("error: empty args passed to check args function".upper())
-    elif len(args[0]) == 0: return True #no arguments (might end up being the above)
+    elif len(args[0]) == 0: return True #no arguments (might end up being an error, not tested)
 
     #check first arg
     first_args = list(map(lambda n: n[0], args))
