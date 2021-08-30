@@ -68,14 +68,16 @@ def check_args(args):
         if not check_args(next_args): return False
     return True
 
+#checks a single argument list
+    #note: get_args_with_name defined later
 def check_arg(arg):
-    if len(arg) == 0: return True #empty function is total?
-    if len(get_args_with_name(arg, "generic")) != 0: return True
+    if len(arg) == 0: return True #empty function is total
+    if len(get_args_with_name(arg, "generic")) != 0: return True #generic arg exists
     zeros = get_args_with_name(arg, "0")
-    if len(zeros) == 0: return False
+    if len(zeros) == 0: return False #no zeros
     elif len(zeros) == len(arg): return False #only zero cases
     non_zeros = filter(lambda n: type(n) is tuple, arg) #similar to get args with name but with tuples
-    non_zeros_less = list(map(lambda n: n[2][0], non_zeros))
+    non_zeros_less = list(map(lambda n: n[2][0], non_zeros)) #destructs the successor tuple
     if check_arg(non_zeros_less): return True
     return False #maybe raise exception
 
