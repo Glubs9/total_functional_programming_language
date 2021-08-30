@@ -182,7 +182,7 @@ def debug_stacks(stacks, it_am):
     print("")
 
 def run():
-    #it = 1 #for debugging
+    it = 1 #for debugging
 
     i = 0
     while (stacks[i].call_stack != []):
@@ -206,8 +206,8 @@ def run():
         i+=1
         if i >= len(stacks): i = 0
 
-        #it+=1
-        #debug_stacks(stacks, it)
+        it+=1
+        debug_stacks(stacks, it)
 
     print("finished!")
     #debug_stacks(stacks, it+1)

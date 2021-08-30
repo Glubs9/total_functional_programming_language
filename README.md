@@ -10,6 +10,7 @@ To run any code you write, put in python Main.py [file_name].
 #### data type
 This language uses unary successor arithmetic (akin to mu-recursive functions). 0 is the base case
 and every number is defined as the successor of 0. Successor is written s[0].                 
+
 #### basic functions
 Entry starts at a main function called main.           
 To define a primitive function the name of the function followed by parenthesis and it's arguments
@@ -19,13 +20,16 @@ arguments to each function being recursively defined (another function call, var
 You can also pattern match on function arguments with successor calls, i.e: minusone(s[a]) = a;     
 You can also define a function multiple times, where it will call the highest succeeded matching
 definition, ala ml. (see definitions in stdlib.tfpl for examples).     
+
 #### non-primitive functions
 You can also define non-primitive functions by using curly braces {}. These functions are also
 called with curly braces. Non-primitive functions are defined identically to primitive functions.     
 What separates primitive and non-primitive functions is that the sum of the primitive functions depth of it's
 arguments must be greater than the sum of the depth of the arguments functions.         
 the function definition test(s[a], s[b]) = plus(s[a], s[s[b]]) has an argument depth of 2 and
-a definition depth of 3, this would error the program.     
+a definition depth of 3, this would error the program.   
+There are some caveats to this though. If a function doesn't call any other function in the output,
+only data constructors like s[a] then depth is not checked.
 The other distinguishing feature of primitive functions is that they must be total.
 This means that a primitive function must cover all possible inputs to the function. A non-primitive
 function does not have this restriction. For example the function      
@@ -38,6 +42,7 @@ where the non-primtive call executes as normal. If the normal execution branch f
 bottom value branch finishes, the bottom value branch is deleted and as are all branches it created.
 In practice this does not come up much with purely unary arithmetic. As more functionality is added
 this will become more important. 
+
 #### examples
 If you would like further examples please refer to stdlib.tfpl.     
 An example of a main function is in test.tfpl.    

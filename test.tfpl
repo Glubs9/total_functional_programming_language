@@ -1,1 +1,4 @@
-main{} = plus(s[0], s[s[0]]);
+three(a) = s[s[s[a]]];
+inf(0) = 0;
+inf(s[a]) = inf(three(a));
+main{} = inf(s[s[0]]);
