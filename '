@@ -1,7 +1,3 @@
-#this is the main file, it handles io and the integration of all the modules together.
-#later on it would be worth separating these, i.e: io one file and integration another, but this
-#project is small enough for now that it is not necersarry
-
 from PreProcess import PreProcess
 from Lexer import Lex
 from Parser import Parse
