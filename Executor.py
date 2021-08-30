@@ -77,11 +77,12 @@ def call_stdlib(func_name, stack):
         if tmp.name == "!": return
     stdlib[func_name](stack)
 
+#unifies a functions argument definniiton with the passed arguments. i.e: f(s[a]) passed with f(s[s[0]]) a becomes s[0]
 def unify(definition, args):
     if definition == [] and args == []: return []
     if len(definition) != len(args): return False
     out = []
-    for n in definition: #could zip to ensure one loop
+    for n in definition: #could zip to ensure one loop but this is easier
         tmp = unify_single(n, args.pop())
         if tmp == False: return False
         elif tmp == []: continue
@@ -90,7 +91,7 @@ def unify(definition, args):
 
 #not pure
     #hardcoded :(
-def unify_single(definition, arg):
+def unify_single(definition, arg): #unifies a single variable
     if definition.name == "s" and arg.name == "s": return unify_single(definition.data[0], arg.data[0])
     elif definition.name == "s" and arg.name != "s": return False
     elif definition.name == "0" and arg.name == "0": return []
@@ -100,52 +101,53 @@ def unify_single(definition, arg):
     elif definition.name != "s": return (definition.name, arg) #check for non-snytacitcal definition
     else: raise Exception("how did i get here?")
 
-#have to match the correct case and return the right function
+#checks which case of the function definitions is matched and returns that function.
 def match_function(func_name, arguments):
-    #check for empty function call
-    #iterate through function definitions until correct case found
     definitions = global_scope[func_name]
     if len(definitions) == 1 and arg_count(func_name) == 0: #no arguments (maybe check argument length)
         return [], definitions[0]
     for n in definitions:
         tmp_args = [n for n in arguments] #copying to avoid side affects
         tmp = unify(n.arguments, tmp_args)
-        if tmp != False: return tmp, n
-    return False, False #yikes, but what are you gonna do i guess
+        if tmp != False: return tmp, n #correctly unified
+    return False, False #yikes, but what are you gonna do i guess (this is checked later)
 
 def arg_count(func_name):
     if func_name in global_scope:
         tmp = global_scope[func_name][0] #assuming all functions have same arity
         return len(tmp.arguments)
     elif func_name in stdlib:
-        return stdlib_args[func_name]
+        return stdlib_args[func_name] #defined earlier in the file
     else:
         raise Exception("unknown fuction called " + str(func_name))
 
+#doesn't reutnr, instead modifies stacks
 def call_user_defined_func(func_name, stack):
-    arguments = []
-    for n in range(arg_count(func_name)):
+    arguments = [] #arguments to pass
+    for _ in range(arg_count(func_name)):
         arguments.append(stack.data_stack.pop())
-    scope, function = match_function(func_name, arguments) #can we do this?
+    scope, function = match_function(func_name, arguments)
     if scope == False and len(list(filter(lambda n: n.name=="!", arguments))) != 0: #if bottom passed as an argument and not matched
-        stack.data_stack.append(Data("!", [])) #i can't remember how to make a function so i just did this
-        return
+        stack.data_stack.append(Data("!", [])) #coudl have pushed id function to stack but this works better
+        return #control flow return, intentionally left blank
     if scope == False:
-        print("failed to match function " + str(func_name) + " with arguments " + str(list(map(str, arguments)))) #string call superfluous
+        print("failed to match function ".upper() + str(func_name) + " with arguments ".upper() + str(list(map(str, arguments)))) #string call superfluous
         exit()
     for n in function.definition:
         stack.call_stack.append((scope, n, function.primitive))
 
-#could with replac with any call
+#scope is a list [(var_name, value), ...]
 def var_in_scope(name, scope):
     for n in scope: 
         if n[0] == name: return True
     return False
 
+#gets the variable value (only ever gets called after var_in_scope checked)
 def handle_var(name, scope, stack):
     for n in scope: 
         if n[0] == name: stack.data_stack.append(n[1])
 
+#handles calling either stdlib, user_defined func or variable
 def call_func(func_name, scope, stack): #although this function is simple, writing any more would be a violation of single function single responsibility
     #check for func_name in scope
     if var_in_scope(func_name, scope): handle_var(func_name, scope, stack)
@@ -171,6 +173,7 @@ def new_stack(stack):
         n.destroy_pos+=1
     stacks.insert(0, stack.clone())
 
+#have to modify stack indexes
 def destroy_stack(pos):
     destroy_posses = set([pos] + stacks[pos].destroy())
     change_am = 0
@@ -195,9 +198,9 @@ def debug_stacks(stacks, it_am):
     print("")
 
 def run():
-    it = 1 #for debugging
+    #it = 1 #for debugging
 
-    i = 0
+    i = 0 #stack index
     while (stacks[i].call_stack != []):
         #write better debug function for multiple stacks
         tmp = stacks[i].call_stack.pop()
@@ -211,27 +214,27 @@ def run():
                 ac = arg_count(tmp[1][1])
                 [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
                 stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
-                i+=1
+                i+=1 #stack index
                 stacks[i].destroy_pos = 0 #should never cause out of bounds error cause stacks added to start of list
                 stacks[i].call_stack.append(([], ("primitive", "destroy"), "primitive"))
             call_func(tmp[1][1], tmp[0], stacks[i])
 
         i+=1
-        if i >= len(stacks): i = 0
+        if i >= len(stacks): i = 0 #loop back to the start of the stack
 
-        it+=1
+        #it+=1
         #debug_stacks(stacks, it)
 
-    print("finished!")
+    print("finished!") #unecersarry but very fun :)
     #debug_stacks(stacks, it+1)
 
-def Execute(IC, execute=True):
+def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     define_functions(IC)
     if execute:
         s = Stack([], [], False)
         stacks.append(s)
         call_func("main", [], s)
-        run()
+        run() #nothing passed, all are global variables :(
         return s.data_stack[0] #IMPORTANT: CHANGE LATER
     else:
         return None #little risky so make sure all calls to execute are properly checked
