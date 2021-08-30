@@ -1,8 +1,13 @@
+#executes code.
+    #another thing it does is build the internal symbol dictionary from func name to definition, which can be done without executing the code.
+
 from collections import defaultdict
 from sys import exit
 
+#global_scope contains a function name mapped to a list of Function objects.
 global_scope = defaultdict(lambda: [])
 
+#not 100% oo but it aids readability
 class Function:
     def __init__(self, arguments, definition, primitive): #add type signature
         self.arguments = arguments
@@ -11,6 +16,7 @@ class Function:
     def __str__(self):
         return "function: " + " ,".join(map(str, self.arguments)) + " : " + str(self.definition) + " is " + str(self.primitive)
 
+#not 100% oo but it aids readability
 class Data:
     def __init__(self, name, data):
         self.name = name
@@ -18,25 +24,31 @@ class Data:
     def __str__(self):
         return self.name + "[" + " ,".join(map(str, self.data)) + "]"
 
-#class Var: #i dont implement this class because it is just a tuple (maybe if readability gets bad)
-
+#constructs args for a function object
+    #as args are an ic constructing the arguments, rather than the actual arguments.
+    #e.g: push a, successor (not real ic) which needs to become
+        # s["a"] (not real repr)
 def construct_args(args_in):
     args = []
     for n in reversed(args_in[1:]):
         if type(n) is not tuple: args.append(Data(n, []))
-        elif n[0] != "data-constructor": raise Exception("non data constructor in argument definition")
-        else: args.append(Data(n[1], [args.pop()])) #change later to handle multi arg constructors
+        elif n[0] != "data-constructor": raise Exception("non data constructor in argument definition") #should be moved to semantics checker
+        else: args.append(Data(n[1], [args.pop()])) #change later to handle multi arg constructors for custom types
     return args
 
+#IC == Intermediate Code
 def define_functions(IC):
     for n in IC: 
-        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0])) #this is why we have to change from using tuples to objects (or tagged unions but they don't exist in python yet)
+        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
+        #tuple repr is a little ugly
 
+#called in stdlib
 def id_print(s):
     tmp = s.data_stack.pop()
     print("print called with " + str(tmp))
     s.data_stack.append(tmp)
 
+#note: although this is defined in stdlib, this should be used (for now) only by internal executor code to destroy stacks
 def destroy(s):
     destroy_stack(s.destroy_pos)
 
@@ -45,9 +57,10 @@ stdlib = {
         "0": lambda s: s.data_stack.append(Data('0', [])), 
         "s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
         "!": lambda s: s.data_stack.append(Data('!', [])),
-        "destroy": destroy,
-        "print": id_print
+        "print": id_print,
+        "destroy": destroy
 }
+#used in arg_count which is used later on
 stdlib_args = {
         "id": 1, #kinda? not in the implementation but in the theory or something
         "0": 0,

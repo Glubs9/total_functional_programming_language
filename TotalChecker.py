@@ -1,31 +1,43 @@
+#checks that a function covers all possible inputs
+    #this is done recursively.
+    #it first checks if there is a generic case (a variable) at the top level. if there is it returns true
+    #if not it checks for a 0 case, if there is no 0 case it returns false
+    #then it checks that there is a successor case, if there is not it returns false
+    #if there is then it recurses one level deeper in that successor (e.g: s[0] -> 0)
+        #this recursion recurses over all successor cases exist, in case there is a function with more than one
+
 from itertools import groupby
 from sys import exit
 from collections import defaultdict
 
+#entry funciton
 def Total_Checker(functions):
-    gf = group_functions(functions)
+    gf = group_functions(functions) #groups functions by function name
     for key, val in gf:
         if not check_func(list(val)):
             print("error: function \"".upper() + str(key) + "\" is not total".upper())
             exit()
     return functions
     
+#groups functions by function name
 def group_functions(functions):
     return total_group(lambda n: n[1][1], functions)
 
+#generic grouping function. Equivalent to groupby(sorted) except that it works for non-comparable items
 def total_group(function, iterable):
-    #we re-write group here instead of using below because sorting is not possible on all structures
-    #return groupby(sorted(iterable, key=function), function)
     dic = defaultdict(list)
     for n in iterable:
         dic[str(function(n))].append(n)
     return dic.items()
 
+#function to make getting args from a function tuple more readable
 def get_args(function):
     return function[1][2]
 
+#check arity of functions are all the same
+    #and converts all generic args (a, b, x,..) to be called "generic" to make coding easier and more readable later on
+    #note: this should be moved out of this function at a later date
 def check_func(functions):
-    #check arity of functions are all the same
     args = list(map(get_args, functions))
     args = list(map(lambda n: list(map(generic_def, n)), args)) #converts all generic args to the same symbol
     return check_args(args) #might be able to inline
