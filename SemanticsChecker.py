@@ -2,7 +2,7 @@
     #it checks to make sure there is never a literal constructor on the bottom type, e.g: s[!]
     #it checks for primitive functions
 
-from Bottom_Checker import Bottom_Checker
+from BottomChecker import Bottom_Checker
 from DepthChecker import Depth_Checker
 from TotalChecker import Total_Checker
 
