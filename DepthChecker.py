@@ -2,8 +2,9 @@
 
 from sys import exit
 
+#entry function
 def Depth_Checker(functions):
-    prim_check = [n for n in functions if not check_solo(n[2])] #removes all functions that don't call recursively. e.g: f(x) = x, is prim recursive cause it doesn't cal any functions
+    prim_check = [n for n in functions if not check_solo(n[2])] #removes all functions that don't call other functions. e.g: f(x) = x
     arg_depth = find_arg_depth(prim_check)
     func_depth = find_func_depth(prim_check)
 
@@ -15,20 +16,23 @@ def Depth_Checker(functions):
 
     return functions
 
-#any function definition 
+#any function definition where there is no other calls in the definition
 def check_solo(defin):
     if type(defin) is not tuple: return True
     elif defin[0] != "data-constructor": return False
     tmp = check_solo(defin[2][0])
     return tmp
 
+#total depth of all arguments
 def find_arg_depth(functions):
     args = [n[1][2] for n in functions]
     return [sum(map(find_depth, n)) for n in args]
 
+#depth of definition, i.e: f(x) = s[x] == 1
 def find_func_depth(functions):
     return [sum(map(find_depth, find_data(n[2]))) for n in functions]
 
+#removes extra function calls from search, i.e: f(f(s[x])) removes f
 def find_data(defin):
     tmp = [n[1] for n in _find_data(defin)]
     return tmp
@@ -44,6 +48,7 @@ def _find_data(defin):
             else: out.append((True, defin))
     return out
 
+#depth of a given ast
 def find_depth(f):
     if type(f) is not tuple: return 0
     return max(map(find_depth, f[2])) + 1
