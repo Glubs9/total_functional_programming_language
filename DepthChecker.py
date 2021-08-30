@@ -1,12 +1,10 @@
-#jeezus this file is a mess
+#this file checks that the sum of the functions arguments depth is > the definitions depth.
 
 from sys import exit
 
 def Depth_Checker(functions):
-    prim_check = [n for n in functions if not check_solo(n[2])]
-    #find depth of arguments
+    prim_check = [n for n in functions if not check_solo(n[2])] #removes all functions that don't call recursively. e.g: f(x) = x, is prim recursive cause it doesn't cal any functions
     arg_depth = find_arg_depth(prim_check)
-    #find depth of outputs in function calls
     func_depth = find_func_depth(prim_check)
 
     #raise exception of depth of args <= depth of outputs

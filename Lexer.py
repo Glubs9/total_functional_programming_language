@@ -1,12 +1,10 @@
-from sys import exit
-
-def append_not_empty(li, string):
-    if string != "":
-        li.append(string)
+#lexes input into tokens
+    #note: usually some form of union type with an enum is used for tokens, but python doesn't
+    #handle these gracefully so I have opted to keep using strings.
 
 TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "0", "!"}
 WHITESPACE = {" ", "\t", "\n"}
-def Lex(str_in):
+def Lex(str_in): #continual string contatenation is not great timewise, change to arrays later.
     out = []
     tmp = ""
     for n in str_in:
@@ -21,3 +19,7 @@ def Lex(str_in):
             tmp += n
     append_not_empty(out, tmp)
     return out
+
+def append_not_empty(li, string):
+    if string != "":
+        li.append(string)

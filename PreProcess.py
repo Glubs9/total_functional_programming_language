@@ -26,4 +26,4 @@ def check_brackets(str_in):
     return True
 
 def check_balanced_semicolons(str_in):
-    return len([n for n in str_in if n == ";"]) != len([n for n in str_in if n == "="]) 
+    return len([n for n in str_in if n == ";"]) == len([n for n in str_in if n == "="]) 

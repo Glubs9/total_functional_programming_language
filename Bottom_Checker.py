@@ -3,12 +3,13 @@ from sys import exit
 
 def Bottom_Checker(funcs):
     for n in funcs:
-        if not all(map(check, n[1][2] + [n[2]])):
+        if not all(map(check, n[1][2] + [n[2]])): #this is a little unreadable from the tuple ast repr. Potential to change it later
             print("error: function \"".upper() + n[1][1] + "\" uses a literal successor on a bottom type (e.g: s[!])".upper())
             exit()
     return True
 
 #i do want to refactor the long if statement below but it is a side effect of the tuple reprsentation so not much can be done?
+    #not much I can do to make this more readable.
 def check(code):
     if type(code) is not list and type(code) is not tuple: return True
     elif type(code) is list and len(code) == 1: return True
