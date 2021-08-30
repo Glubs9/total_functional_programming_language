@@ -60,3 +60,4 @@ this is a list of function within the standard library.
 	<li> minus(a, b) (returns a-b note: this uses pred so any answer lower than 0 will be 0)</li>
 	<li> ack{a, b} (returns the ackerrman function, this is not too useful but is a good example of a non-primitive function)</li>
 </ol>
+
