@@ -1,5 +1,5 @@
 three(a) = s[s[s[a]]];
 inf(0) = 0;
 inf(s[a]) = inf(three(a));
-inf_function_needs_to_be_fixed(a) = a;
+inf_function_needs_to_be_fixed_at_a_later_date(a) = a;
 main{} = plus(s[s[0]], s[s[s[0]]]);
