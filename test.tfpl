@@ -7,3 +7,8 @@ inf_function_needs_to_be_fixed(a) = a;
 main{} = plus(s[s[0]], s[s[s[0]]]);
 
 zero() = 0;
+
+odd(0) = 0;
+odd(s[n]) = even(n);
+even(0) = s[0];
+even(s[n]) = odd(n);

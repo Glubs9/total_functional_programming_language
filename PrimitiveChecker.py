@@ -1,5 +1,7 @@
-from TotalChecker import group_functions
 from sys import exit
+from collections import defaultdict
+from functools import reduce #still don't get why this isn't stdlib
+from TotalChecker import group_functions
 
 def Primitive_Checker(prim_funcs):
     print("before debugging prim funcs")
@@ -9,9 +11,12 @@ def Primitive_Checker(prim_funcs):
     gf = group_functions(prim_funcs)
     for key, val in gf:
         if not run_checkers(val):
-            print("function " + val[0][1][1] + " not primitive recursive")
+            print("error: function ".upper() + val[0][1][1] + " not primitive recursive".upper())
             exit()
     #run loop check / circular dependency / mutual recursion
+    if not check_circular(gf):
+        print("error: circular dependency detected".upper())
+        exit()
     return True
 
 def run_checkers(func_in):
@@ -83,10 +88,62 @@ def match_args(args1, args2):
 def rec_check(function):
     #for checking the in between functions basically I could probably just say "any function that
     #isn't the current function. this is for 0 case and the composition on the operator in the s case
+    return zero_rec_check(function) and succ_rec_check(function)
+
+def zero_rec_check(function):
+    print(function)
+    zero_funcs = [n for n in function if n[1][2][0] == ["0"]]
+    if len(zero_funcs) != 1:
+        print("incorrect amount of 0 match functions with function", str(function[1][1]))
+        exit() #not great to exit here
+    zero_func = zero_funcs[0]
+    args = zero_func[1][2][1:]
+
+    if type(zero_func[2]) is not tuple: return False
+    elif not match_args(args, zero_func[2][2]): return False
+
     return True
 
+def succ_rec_check(function):
+    return True
 
 #might have to recursively check the inside of each function using unary checking
 #like have it so that you can check stuff that only happens inside one function and run it
 #recursively
 #thisi s probably needed for comp and zer oand stuff
+
+#ok so I wasn't 100% sure on if mutual recursion is covered in primitive recursion so I just error'd
+#if it is mutually recursive.
+def check_circular(grouped_functions):
+
+    #build adjacency matrix
+    graph = defaultdict(lambda: set())
+    for key,val in grouped_functions:
+        for f in val:
+            func_name = f[1][1]
+            for n in called_functions(f[2]):
+                if n != func_name: graph[func_name].add(n) #filter out func name probs
+
+    return graph_circular_check(graph)
+
+def called_functions(function):
+    if type(function) is list: return [] #list means variable so now good
+    elif type(function) is tuple:
+        add_name = function[1] #might filter out successor 4 the gainzzz (speed optimization), probs not tho lol
+        return [add_name] + reduce(lambda n1,n2: n1+n2, map(called_functions, function[2])) #not fast, change later?
+    else:
+        raise Exception("interpreter error, unknown case reached in called_functions with: " + str(function))
+
+def graph_circular_check(graph):
+    return not any((circular_check_rec(graph, k) for k,v in graph.items())) #slow as hek but will do for now since i'm rushing a bitlol (have to iterate through all cause graph isn't fully conectedded)
+
+def circular_check_rec(graph, name, prev=set()):
+    if name not in graph: return False #recursing with like inbuilt stdlib func
+    for n in graph[name]:
+        if n in prev: return True
+        send_prev = prev.copy()
+        send_prev.add(n)
+        tmp = circular_check_rec(graph, n, send_prev)
+        if tmp: return True
+    return False
+

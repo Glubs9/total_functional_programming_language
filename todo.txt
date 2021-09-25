@@ -10,9 +10,7 @@
 3b. change type checker to handle ml data
 4. re-add checkers
 4b. including type checker
-5. reserach more correct prim rec checker
-5a. ok no I need to do this first
-	- do this tommorow and start crying :)
 6. implement it
+7. update documentation
 
 I have 4 days, and am going to kill it! :)

@@ -1,13 +1,18 @@
-plus(0, b) = b;
+id(a) = a;
+
+plus(0, b) = id(b);
 plus(s[a], b) = s[plus(a, b)];
 
-multiply(0, b) = 0;
+ignore(b) = 0;
+multiply(0, b) = ignore(b);
 multiply(s[a], b) = plus(b, multiply(a, b));
 
-power(0, b) = s[0];
+one(b) = s[0];
+power(0, b) = one(b);
 power(s[a], b) = multiply(b, power(a, b));
 
-pred(0) = 0;
+zero() = 0;
+pred(0) = zero();
 pred(s[a]) = a;
 
 minus(b, 0) = b;
