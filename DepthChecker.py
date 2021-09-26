@@ -1,4 +1,6 @@
 #this file checks that the sum of the functions arguments depth is > the definitions depth.
+#note: this turns out to not work and has been replaced by primitivechecker. I have kept it here
+#because I might need it later and I am still proud of it but it is not used.
 
 from sys import exit
 
