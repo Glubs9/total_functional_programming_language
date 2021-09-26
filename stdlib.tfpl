@@ -1,17 +1,30 @@
-plus(0, b) = b;
-plus(s[a], b) = s[plus(a, b)];
+id(a) = a;
 
-multiply(0, b) = 0;
-multiply(s[a], b) = plus(b, multiply(a, b));
+proj(a, b, c) = b;
+s_proj(a, b, c) = s[proj(a,b,c)];
+plus(0, b) = id(b);
+plus(s[a], b) = s_proj(a, plus(a, b), b);
 
-power(0, b) = s[0];
-power(s[a], b) = multiply(b, power(a, b));
+proj_1(a,b,c) = b;
+proj_2(a,b,c) = c;
+plus_proj(a,b,c) = plus(proj_1(a,b,c), proj_2(a,b,c));
+ignore(b) = 0;
+multiply(0, b) = ignore(b);
+multiply(s[a], b) = plus_proj(a, multiply(a, b), b);
 
-pred(0) = 0;
-pred(s[a]) = a;
+one(b) = s[0];
+multiply_proj(a,b,c) = multiply(proj_1(a,b,c), proj_2(a,b,c));
+power(0, b) = one(b);
+power(s[a], b) = multiply_proj(a, power(a, b), b);
 
-minus(b, 0) = b;
-minus(b, s[a]) = pred(minus(b, a));
+zero() = 0;
+proj_3(a,b) = a;
+pred(0) = zero();
+pred(s[a]) = proj_3(a, pred(a));
+
+pred_proj(a,b,c) = pred(proj_1(a,b,c));
+minus(0,x) = id(x);
+minus(s[n],x) = pred_proj(n,minus(n,x),x);
 
 ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};

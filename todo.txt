@@ -1,3 +1,16 @@
 3. general testing, definitely around splitting and the such
 4. see if you can get that logic programming idea sorted
-5. commenting (maybe just chuck stuff after the ;?
+5. commenting (maybe just chuck stuff after the ;? )
+
+1. add simple type definitions (maybe don't do)
+	- type_[funcname](Nat, Nat) = Nat;
+2. add parser for ml data
+2b. comment out checking
+3. change execute for ml data
+3b. change type checker to handle ml data
+4. re-add checkers
+4b. including type checker
+6. implement it
+7. update documentation
+
+I have 4 days, and am going to kill it! :)

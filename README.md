@@ -23,26 +23,22 @@ definition, ala ml. (see definitions in stdlib.tfpl for examples).
 
 #### non-primitive functions
 You can also define non-primitive functions by using curly braces {}. These functions are also
-called with curly braces. Non-primitive functions are defined identically to primitive functions.     
-What separates primitive and non-primitive functions is that the sum of the primitive functions depth of it's
-arguments must be greater than the sum of the depth of the arguments functions.         
-the function definition test(s[a], s[b]) = plus(s[a], s[s[b]]) has an argument depth of 2 and
-a definition depth of 3, this would error the program.    
-There are some caveats to this though. If a function doesn't call any other function in the output,
-only data constructors like s[a] then depth is not checked. (THIS IS CAUSING PROBLEMS, CHANGE LATER).     
-Also, data depth is only calculated at the very bottom level of a call. e.g: s[f(s[x])] has a depth of one.       
-The other distinguishing feature of primitive functions is that they must be total.
-This means that a primitive function must cover all possible inputs to the function. A non-primitive
-function does not have this restriction. For example the function      
-test(a) = a; does cover all inputs whereas     
-test(s[a]) = a; does not, as it misses the case where the input is 0, in which case it will not match.        
+called with curly braces. Non-primitive functions are defined identically to primitive functions except using parentheses () and matches one of the following cases.   (note: this is a reproduction of the normal definition. also note: Oftentimes people allow composition and other functions to be inlined, this is not true in my language)     
+1. constant 0 function. A function that returns 0.    
+2. successor function. A function that constructs the successor of a natural number. called with square brackets.     
+3. projection function. A functino that takes some arguments and returns only one of them. i.e: f(a,b,c) = b; note: this is not defined in stdlib, but can be defined manually.     
+4. composition h(x1,...,xm) = f(g1(x1,...,xm),...,gk(x1,...,xm)); (for any functions, that aren't recursive. Where h and g have the same arity and f has k arity)     
+5. primitive recursion has exactly two cases     
+	a. h(0,x1,...xm) = f(x1,...,xm); (f != h)     
+	b. h(s[y],x1,...,xm) = g(y,h(y,x1,...,xm),x1,...,xm); (g != h)    
+         
 You can call a non-primitive function within a primitive function even though, conceptually, this
 would create a non-primitive function. This is worked around by the program splitting into two
 branches, one where the non-primitive call immediately returns the bottom value (!) and another
 where the non-primtive call executes as normal. If the normal execution branch finishes before the
 bottom value branch finishes, the bottom value branch is deleted and as are all branches it created.
 In practice this does not come up much with purely unary arithmetic. As more functionality is added
-this will become more important.
+this will become more important. Also note: you cannot pattern match bottom in primitive recursive functions.
 ![graph not found](not_program.png)
 
 #### examples
