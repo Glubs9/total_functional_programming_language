@@ -4,10 +4,12 @@ from functools import reduce #still don't get why this isn't stdlib
 from TotalChecker import group_functions
 
 def Primitive_Checker(prim_funcs):
+    """
     print("before debugging prim funcs")
     for n in prim_funcs:
         print(n)
     print("finished")
+    """
     gf = group_functions(prim_funcs)
     for key, val in gf:
         if not run_checkers(val):
@@ -57,17 +59,19 @@ def comp_check(function):
     definition = function[2]
     if type(definition) is not tuple: return False
     if not check_args(function): return False
+    if definition[1] == function[1][1]: return False
     args = function[1][2]
 
     inner_funcs = function[2][2]
     if any(map(lambda n: type(n) is not tuple, inner_funcs)): return False
-    print(function)
-    print(inner_funcs)
+    if any(map(lambda n: n[1] == function[1][1], inner_funcs)): return False
     inner_args = [n[2] for n in inner_funcs]
 
     for n in inner_args:
-        if not match_args(args, inner_args):
+        if not match_args(args,n):
             return False
+
+    print("finished!")
 
     return True
 
@@ -75,6 +79,9 @@ def comp_check(function):
 def check_args(function):
     print(function)
     args = function[1][2]
+    return check_arg_list(args)
+
+def check_arg_list(args):
     if args == [[]]: return True #empty arguments
     for n in args:
         if type(n) is not list: return False #arg not a variable
@@ -82,6 +89,7 @@ def check_args(function):
     return True
 
 def match_args(args1, args2):
+    if args1 == [] and args2 == [[]]: return True #edge case i don't know why? probs symptom of bigger bug
     return sorted(args1) == sorted(args2)
 
 #should be the easiest to write next
@@ -104,7 +112,37 @@ def zero_rec_check(function):
 
     return True
 
+#yikes this is unreadable (and probably bugged)
 def succ_rec_check(function):
+
+    succ = [n for n in function if type(n[1][2][0]) is tuple and n[1][2][0][1] == "s"]
+    if len(succ) != 1: return False
+    if not check_arg_list(succ[0][1][2][1:]): return False
+    succ_func = succ[0]
+    succ_var = succ_func[1][2][0][2][0]
+    if type(succ_var) is not list: return False
+    succ_var = succ_var[0]
+    def_func = succ_func[2]
+    if type(def_func) is not tuple: return False
+    if def_func[1] == succ_func[1][1]: return False
+    def_func_args = def_func[2]
+
+    if len(def_func_args) < 2: return False
+    if def_func_args[0][0] != succ_var: return False
+
+    rec_call = def_func_args[1]
+    if type(rec_call) is not tuple: return False
+    if rec_call[1] != succ_func[1][1]: return False
+
+    #check it's the right first arg
+    arg1 = rec_call[2][0]
+    if arg1[0] != succ_var: return False
+
+    if rec_call[2][1:] != succ_func[1][2][1:]: return False
+    #check it's the right set of args next
+
+    if not match_args(succ_func[1][2][1:], def_func_args[2:]): return False
+
     return True
 
 #might have to recursively check the inside of each function using unary checking
@@ -143,7 +181,7 @@ def circular_check_rec(graph, name, prev=set()):
         if n in prev: return True
         send_prev = prev.copy()
         send_prev.add(n)
+
         tmp = circular_check_rec(graph, n, send_prev)
         if tmp: return True
     return False
-
