@@ -34,6 +34,6 @@ if len(sys.argv) != 2:
 inp_file = open(sys.argv[1]).read()
 out = Run(inp_file)
 
-print("the output of running main in file " + sys.argv[1] + " is: ")
+print("the output of running main{} in file " + sys.argv[1] + " is: ")
 print(out)
 print("with a depth of " + str(depth(out)))

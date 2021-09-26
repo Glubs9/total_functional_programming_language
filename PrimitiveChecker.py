@@ -71,13 +71,10 @@ def comp_check(function):
         if not match_args(args,n):
             return False
 
-    print("finished!")
-
     return True
 
 #checks if args don't contain pattern matching
 def check_args(function):
-    print(function)
     args = function[1][2]
     return check_arg_list(args)
 
@@ -99,7 +96,6 @@ def rec_check(function):
     return zero_rec_check(function) and succ_rec_check(function)
 
 def zero_rec_check(function):
-    print(function)
     zero_funcs = [n for n in function if n[1][2][0] == ["0"]]
     if len(zero_funcs) != 1:
         print("incorrect amount of 0 match functions with function", str(function[1][1]))
@@ -112,21 +108,23 @@ def zero_rec_check(function):
 
     return True
 
-#yikes this is unreadable (and probably bugged)
+#yikes this is unreadable
 def succ_rec_check(function):
 
     succ = [n for n in function if type(n[1][2][0]) is tuple and n[1][2][0][1] == "s"]
     if len(succ) != 1: return False
     if not check_arg_list(succ[0][1][2][1:]): return False
+
     succ_func = succ[0]
     succ_var = succ_func[1][2][0][2][0]
     if type(succ_var) is not list: return False
+
     succ_var = succ_var[0]
     def_func = succ_func[2]
     if type(def_func) is not tuple: return False
     if def_func[1] == succ_func[1][1]: return False
-    def_func_args = def_func[2]
 
+    def_func_args = def_func[2]
     if len(def_func_args) < 2: return False
     if def_func_args[0][0] != succ_var: return False
 
@@ -134,13 +132,10 @@ def succ_rec_check(function):
     if type(rec_call) is not tuple: return False
     if rec_call[1] != succ_func[1][1]: return False
 
-    #check it's the right first arg
     arg1 = rec_call[2][0]
     if arg1[0] != succ_var: return False
 
     if rec_call[2][1:] != succ_func[1][2][1:]: return False
-    #check it's the right set of args next
-
     if not match_args(succ_func[1][2][1:], def_func_args[2:]): return False
 
     return True
