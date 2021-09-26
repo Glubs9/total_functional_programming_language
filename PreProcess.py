@@ -11,7 +11,7 @@ def PreProcess(str_in):
         exit()
     elif not check_balanced_semicolons(str_in):
         print("error: non-matching amount of semi-colons and definitions".upper())
-    return str_in
+    return remove_comments(str_in)
 
 brackets = {"(" : ")", "{" : "}", "[" : "]"}
 opening = {k for k,v in brackets.items()} #maybe a little unecersarry but renaming makes it more readable
@@ -27,3 +27,7 @@ def check_brackets(str_in):
 
 def check_balanced_semicolons(str_in):
     return len([n for n in str_in if n == ";"]) == len([n for n in str_in if n == "="]) 
+
+import re
+def remove_comments(str_in):
+    return re.sub("/\*.*?\*/", "", str_in)

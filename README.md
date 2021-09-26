@@ -21,6 +21,8 @@ You can also pattern match on function arguments with successor calls, i.e: minu
 You can also define a function multiple times, where it will call the highest succeeded matching
 definition, ala ml. (see definitions in stdlib.tfpl for examples).     
 
+You can also do commenting using /\* and \*/
+
 #### non-primitive functions
 You can also define non-primitive functions by using curly braces {}. These functions are also
 called with curly braces. Non-primitive functions are defined identically to primitive functions except using parentheses () and matches one of the following cases.   (note: this is a reproduction of the normal definition. also note: Oftentimes people allow composition and other functions to be inlined, this is not true in my language)     
