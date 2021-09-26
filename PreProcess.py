@@ -30,4 +30,4 @@ def check_balanced_semicolons(str_in):
 
 import re
 def remove_comments(str_in):
-    return re.sub("/\*.*?\*/", "", str_in)
+    return re.sub("/\*.*?\*/", "", str_in, flags=re.DOTALL)
