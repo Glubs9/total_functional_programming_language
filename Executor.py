@@ -43,10 +43,16 @@ def define_functions(IC):
         global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
         #tuple repr is a little ugly
 
+#calculates the depth of unary arithmetic. Useful in outputting the results of a file.
+def depth(data: Data): #type data from execute.py
+    if data.name == "!": return -1
+    if data.name == "0": return 0
+    else: return max(map(lambda n: n+1, map(depth, data.data))) #data.data is ugly naming, change later
+
 #called in stdlib
 def id_print(s):
     tmp = s.data_stack.pop()
-    print("print called with " + str(tmp))
+    print(str(tmp), ":", depth(tmp))
     s.data_stack.append(tmp)
 
 #note: although this is defined in stdlib, this should be used only by internal executor code to destroy stacks
@@ -178,12 +184,17 @@ class Stack:
 
 stacks = []
 
-def update_destroy(stack, add_am):
+def update_destroy(stack, add_am, destroy_posses):
     s = stack.call_stack
+    pop_positions = []
     for i in range(len(s)):
         if type(s[i][1]) is str: continue
+        if s[i][1][1] == "destroy" and s[i][1][2] in destroy_posses:
+            pop_positions.append(i)
         if s[i][1][1] == "destroy":
             s[i] = (s[i][0], (s[i][1][0], s[i][1][1], s[i][1][2]+add_am), s[i][2])
+    for i in reversed(pop_positions):
+        s.pop(i)
 
 def get_destroy_positions(stack): #code re use :(
     s = stack.call_stack
@@ -196,7 +207,7 @@ def get_destroy_positions(stack): #code re use :(
 
 def new_stack(stack):
     for n in stacks: #ugh i have to use a for loop instead of map cause impurities
-        update_destroy(n, 1)
+        update_destroy(n, 1, {})
     stacks.insert(0, stack.clone())
 
 #have to modify stack indexes
@@ -208,7 +219,7 @@ def destroy_stack(pos):
             change_am-=1
             stacks.pop(n)
         else:
-            update_destroy(stacks[n], change_am)
+            update_destroy(stacks[n], change_am, destroy_posses)
 
 def debug_stacks(stacks, it_am):
     print("it am = " + str(it_am))
@@ -225,7 +236,7 @@ def debug_stacks(stacks, it_am):
     print("")
 
 def run():
-    #it = 1 #for debugging
+    it = 1 #for debugging
 
     i = 0 #stack index
     while (stacks[i].call_stack != []):
@@ -245,7 +256,9 @@ def run():
         i+=1
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
-        #it+=1
+        it+=1
+        if it % 1000000 == 0:
+            print(it, ":", len(stacks[i].call_stack))
         #debug_stacks(stacks, it)
 
     print("finished!") #unecersarry but very fun :)

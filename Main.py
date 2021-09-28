@@ -6,7 +6,7 @@ from PreProcess import PreProcess
 from Lexer import Lex
 from Parser import Parse
 from ICGenerator import Generate_IC
-from Executor import Data, Execute
+from Executor import Data, Execute, depth
 from SemanticsChecker import Semantics_Checker
 import sys
 
@@ -18,12 +18,6 @@ def Run(str_in, execute=True):
     ic = Generate_IC(Semantics_Checker(ast)) 
     output = Execute(ic, execute)
     return output
-
-#calculates the depth of unary arithmetic. Useful in outputting the results of a file.
-def depth(data: Data): #type data from execute.py
-    if data.name == "!": return -1
-    if data.name == "0": return 0
-    else: return max(map(lambda n: n+1, map(depth, data.data))) #data.data is ugly naming, change later
 
 stdlib_str = open("stdlib.tfpl", "r").read()
 Run(stdlib_str, False) #do not execute main function
