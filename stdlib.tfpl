@@ -1,7 +1,6 @@
 id(a) = a;
 
-proj(a, b, c) = b; /* i should rename projection functions to be a more regular naming schema,
-		      also this function is repeated later on */ 
+proj(a, b, c) = b;
 s_proj(a, b, c) = s[proj(a,b,c)];
 plus(0, b) = id(b);
 plus(s[a], b) = s_proj(a, plus(a, b), b);

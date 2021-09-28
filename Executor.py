@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from sys import exit
+from functools import reduce
 
 #global_scope contains a function name mapped to a list of Function objects.
 global_scope = defaultdict(lambda: [])
@@ -48,9 +49,15 @@ def id_print(s):
     print("print called with " + str(tmp))
     s.data_stack.append(tmp)
 
-#note: although this is defined in stdlib, this should be used (for now) only by internal executor code to destroy stacks
-def destroy(s):
-    destroy_stack(s.destroy_pos)
+#note: although this is defined in stdlib, this should be used only by internal executor code to destroy stacks
+def destroy(s, func_call):
+    destroy_stack(func_call[1][2]) #ewwww
+
+def destroy_self(s):
+    for n in range(len(stacks)): #stacks defined later
+        if s == stacks[n]: #equality defined through pointer equality i think so this should be fast enough?
+            destroy_stack(n)
+            break
 
 stdlib = {
         "id": lambda s: None, #id doesn't affect the stack so nothing happens (maybe change later)
@@ -58,7 +65,8 @@ stdlib = {
         "s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
         "!": lambda s: s.data_stack.append(Data('!', [])),
         "print": id_print,
-        "destroy": destroy
+        "destroy": destroy,
+        "destroy_self": destroy_self
 }
 #used in arg_count which is used later on
 stdlib_args = {
@@ -70,7 +78,10 @@ stdlib_args = {
         "print": 1
 }
 
-def call_stdlib(func_name, stack):
+def call_stdlib(func_name, stack, func_call):
+    if func_name == "destroy": #ewww please stop gross code :(
+        destroy(stack, func_call)
+        return
     if len(stack.data_stack) != 0:
         tmp = stack.data_stack.pop()
         stack.data_stack.append(tmp)
@@ -148,29 +159,44 @@ def handle_var(name, scope, stack):
         if n[0] == name: stack.data_stack.append(n[1])
 
 #handles calling either stdlib, user_defined func or variable
-def call_func(func_name, scope, stack): #although this function is simple, writing any more would be a violation of single function single responsibility
+def call_func(func_name, scope, stack, func_call): #although this function is simple, writing any more would be a violation of single function single responsibility
     #check for func_name in scope
     if var_in_scope(func_name, scope): handle_var(func_name, scope, stack)
-    elif func_name in stdlib: call_stdlib(func_name, stack)
+    elif func_name in stdlib: call_stdlib(func_name, stack, func_call)
     else: call_user_defined_func(func_name, stack)
 
 #should and probably could move stack stuff to separate file
 class Stack:
-    def __init__(self, call_stack, data_stack, destroy_pos=None):
+    def __init__(self, call_stack, data_stack):
         self.call_stack = call_stack
         self.data_stack = data_stack
-        self.destroy_pos = destroy_pos
     def destroy(self):
-        if self.destroy_pos == None: return []
-        else: return [self.destroy_pos] + stacks[self.destroy_pos].destroy()
+        destroy_posses = get_destroy_positions(self)
+        return destroy_posses + reduce(lambda l1,l2: l1+l2, [stacks[n].destroy() for n in destroy_posses], []) #stacks form tree so this is safe
     def clone(self):
         return Stack([n for n in self.call_stack], [n for n in self.data_stack])
 
 stacks = []
 
+def update_destroy(stack, add_am):
+    s = stack.call_stack
+    for i in range(len(s)):
+        if type(s[i][1]) is str: continue
+        if s[i][1][1] == "destroy":
+            s[i] = (s[i][0], (s[i][1][0], s[i][1][1], s[i][1][2]+add_am), s[i][2])
+
+def get_destroy_positions(stack): #code re use :(
+    s = stack.call_stack
+    out = []
+    for i in range(len(s)):
+        if type(s[i][1]) is str: continue
+        if s[i][1][1] == "destroy":
+            out.append(s[i][1][2])
+    return out
+
 def new_stack(stack):
     for n in stacks: #ugh i have to use a for loop instead of map cause impurities
-        n.destroy_pos+=1
+        update_destroy(n, 1)
     stacks.insert(0, stack.clone())
 
 #have to modify stack indexes
@@ -179,15 +205,16 @@ def destroy_stack(pos):
     change_am = 0
     for n in reversed(range(0, len(stacks))):
         if n in destroy_posses:
-            change_am+=1
+            change_am-=1
             stacks.pop(n)
         else:
-            stacks[n].destroy_pos-=change_am
+            update_destroy(stacks[n], change_am)
 
 def debug_stacks(stacks, it_am):
     print("it am = " + str(it_am))
     for i in range(len(stacks)):
         print("for stack " + str(i))
+        #print("destroy pos", str(stacks[i].destroy_pos))
         print("call_satck")
         for n in stacks[i].call_stack:
             print(n)
@@ -202,22 +229,18 @@ def run():
 
     i = 0 #stack index
     while (stacks[i].call_stack != []):
-        #write better debug function for multiple stacks
         tmp = stacks[i].call_stack.pop()
         if type(tmp[1]) is str: #yikes I need to fix this
-            #NEED TO ADD PRIMITIVE \ NONPRIMITVE CHECKING \ WE NEED TO FIX THIS \ DO THIS NEXT
-            call_func(tmp[1], tmp[0], stacks[i])
+            call_func(tmp[1], tmp[0], stacks[i], tmp)
         else:
             if tmp[2] == "primitive" and tmp[1][0] == "non-primitive":
                 new_stack(stacks[i])
-                #handle removing args from old stack, for this function
                 ac = arg_count(tmp[1][1])
                 [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
                 stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
                 i+=1 #stack index
-                stacks[i].destroy_pos = 0 #should never cause out of bounds error cause stacks added to start of list
-                stacks[i].call_stack.append(([], ("primitive", "destroy"), "primitive"))
-            call_func(tmp[1][1], tmp[0], stacks[i])
+                stacks[i].call_stack.append(([], ("primitive", "destroy", 0), "primitive"))
+            call_func(tmp[1][1], tmp[0], stacks[i], tmp)
 
         i+=1
         if i >= len(stacks): i = 0 #loop back to the start of the stack
@@ -231,10 +254,11 @@ def run():
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     define_functions(IC)
     if execute:
-        s = Stack([], [], False)
+        s = Stack([], []) #, False)
         stacks.append(s)
-        call_func("main", [], s)
+        call_func("main", [], s, None)
         run() #nothing passed, all are global variables :(
+        if len(s.data_stack) == 0: return Data("!", [])
         return s.data_stack[0] #IMPORTANT: CHANGE LATER
     else:
         return None #little risky so make sure all calls to execute are properly checked

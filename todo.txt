@@ -1,6 +1,6 @@
 3. general testing, definitely around splitting and the such
 4. see if you can get that logic programming idea sorted
-5. commenting (maybe just chuck stuff after the ;? )
+5. double check destroy doesn't exist in any primitive function
 
 1. add simple type definitions (maybe don't do)
 	- type_[funcname](Nat, Nat) = Nat;
