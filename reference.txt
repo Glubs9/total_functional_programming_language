@@ -1,0 +1,4 @@
+Total Functional Programming D.A Turner (Middlesex University, UK) Journal of Universal Computer Science, vol. 10, no 7 (2004), 751-768
+https://www.cl.cam.ac.uk/archive/mjcg/plans/Coinduction.html
+https://en.wikipedia.org/wiki/Primitive_recursive_function
+(more unmentioned, will add too later)
