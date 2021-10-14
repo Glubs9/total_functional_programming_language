@@ -1,3 +1,5 @@
 3. general testing, definitely around splitting and the such
 4. see if you can get that logic programming idea sorted
 5. check destroy doesn't exist in any primitive function
+6. ml esque algebra
+	1. lexer defined like this data n = name1[type,type,...] | name2[type,type,...] | ...; 
