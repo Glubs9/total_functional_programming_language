@@ -37,6 +37,8 @@ def get_args(function):
         #note: this should be moved out of this function at a later date
 def check_func(functions):
     args = list(map(get_args, functions))
+    #check for empty args
+    if args == [[[]]]: return True #function with no args being passed is always true
     args = list(map(lambda n: list(map(generic_def, n)), args)) #converts all generic args to the same symbol
     return check_args(args) #might be able to inline
 
@@ -44,6 +46,7 @@ def check_func(functions):
 def generic_def(arg):
     if type(arg) is tuple:
         return (arg[0], arg[1], [generic_def(arg[2][0])]) #successor
+    elif type(arg) is list and len(arg) == 0: return arg
     elif type(arg) is list and arg[0] == "!":
         return ["!"]
     elif type(arg) is list and arg[0] == "0":

@@ -1,3 +1,4 @@
+test() = s[s[0]];
 id(a) = a;
 
 proj(a, b, c) = b;

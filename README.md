@@ -22,20 +22,19 @@ You can also pattern match on function arguments with successor calls, i.e: minu
 You can also define a function multiple times, where it will call the highest succeeded matching
 definition, ala ml. (see definitions in stdlib.tfpl for examples).     
 
+Primitive functions are defined using structural recursion ala coq. Please refer to that system to
+understand the restrictions. (note: I have not checked how mutual recursion works in coq or other
+		total funcitonal programming languages so, just for now maybe? I have caused
+		primitive recursive functions to error when mututal recursion is done).
+
 You can also do commenting using /\* and \*/
 
-#### non-primitive functions
-You can also define non-primitive functions by using curly braces {}. These functions are also
-called with curly braces. Non-primitive functions are defined identically to primitive functions except using parentheses () and matches one of the following cases.   (note: this is a reproduction of the normal definition. also note: Oftentimes people allow composition and other functions to be inlined, this is not true in my language)     
-1. constant 0 function. A function that returns 0.    
-2. successor function. A function that constructs the successor of a natural number. called with square brackets.     
-3. projection function. A functino that takes some arguments and returns only one of them. i.e: f(a,b,c) = b; note: this is not defined in stdlib, but can be defined manually.     
-4. composition h(x1,...,xm) = f(g1(x1,...,xm),...,gk(x1,...,xm)); (for any functions, that aren't recursive. Where h and g have the same arity and f has k arity)     
-5. primitive recursion has exactly two cases     
-	a. h(0,x1,...xm) = f(x1,...,xm); (f != h)     
-	b. h(s[y],x1,...,xm) = g(y,h(y,x1,...,xm),x1,...,xm); (g != h)    
+#### non primitive functions
+you can also define non-primitive functions by using {} instead of (). They work identically as
+primitive recursive functions with the exception that they don't have to deal with structural
+recursion in the same way as primitive recursive functions.
          
-You can call a non-primitive function within a primitive function even though, conceptually, this
+One small thing is that you can call a non-primitive function within a primitive function even though, conceptually, this
 would create a non-primitive function. This is worked around by the program splitting into two
 branches, one where the non-primitive call immediately returns the bottom value (!) and another
 where the non-primtive call executes as normal. If the normal execution branch finishes before the

@@ -3,3 +3,8 @@
 5. check destroy doesn't exist in any primitive function
 6. ml esque algebra
 	1. lexer defined like this data n = name1[type,type,...] | name2[type,type,...] | ...; 
+7. fix recursion to be structural recursion
+	- introduce back the previous checkers except make sure that all calls that are recursive in
+	nature use structural recursion. Don't need to run it calling other functions
+	- also check that the only time a recursive function is called is when it is being
+	structurally recursed
