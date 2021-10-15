@@ -2,7 +2,7 @@
     #note: usually some form of union type with an enum is used for tokens, but python doesn't
     #handle these gracefully so I have opted to keep using strings.
 
-TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "0", "!"}
+TERMINALS = {"(", ")", "{", "}", "[", "]", ",", ";", "=", "0", "!", "|"}
 WHITESPACE = {" ", "\t", "\n"}
 def Lex(str_in): #continual string contatenation is not great timewise, change to arrays later.
     out = []

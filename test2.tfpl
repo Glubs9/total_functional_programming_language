@@ -1,0 +1,1 @@
+data test = s[test] | 0;
