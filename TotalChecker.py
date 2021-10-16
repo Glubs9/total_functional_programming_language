@@ -36,6 +36,10 @@ def get_args(function):
     #and converts all generic args (a, b, x,..) to be called "generic" to make coding easier and more readable later on
         #note: this should be moved out of this function at a later date
 def check_func(functions):
+
+    #type check here
+    #discover like all of the possible ones
+
     args = list(map(get_args, functions))
     #check for empty args
     if args == [[[]]]: return True #function with no args being passed is always true

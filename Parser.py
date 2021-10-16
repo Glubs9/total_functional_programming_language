@@ -4,14 +4,17 @@
     #as for now I have opted not to as this is understandable enough and it hasn't caused enough
     #problems for me to need to change this. (I understand the concept of technical debt but I have chosen to ignore it)
 
-def split_lines(tokens): #equivalent of .split(";") for a token list
+#entry function at the bottom of the file
+
+def split_lines(tokens, split_str): #equivalent of .split(split_str) for a token list
     out = []
     tmp = []
     for n in tokens:
-        if n == ";": 
+        if n == split_str: 
             out.append(tmp)
             tmp = []
         else: tmp.append(n)
+    out.append(tmp)
     return out
 
 inverse = {"(": ")", "{": "}", "[": "]"} #inverse feels a little unecersarry
@@ -44,14 +47,25 @@ def build_function(func_call): #builds a function tuple, e.g: ("primitive", [fun
 
 import sys #only place it's used is in this function so i put it here for readability
 def build_tree(li): #builds a full function definition, i.e: ["=", f(x), x] (but it would be parsed)
-    try:
-        i = li.index("=")
-    except ValueError:
-        print("no equals sign found in function " + str(li))
-        sys.exit()
-    return ["=", build_function(li[:i]), build_function(li[i+1:])]
+    print("li=",li)
+    if li[0] == "data":
+        tmp = ["data", li[1]]
+        for n in split_lines(li[3:], "|"):
+            print("found n", n)
+            tmp.append(build_function(n))
+        return tmp
+    else:
+        try:
+            i = li.index("=")
+        except ValueError:
+            print("no equals sign found in function " + str(li))
+            sys.exit()
+        return ["=", build_function(li[:i]), build_function(li[i+1:])]
 
 def Parse(tokens):
-    lines = split_lines(tokens)
+    lines = split_lines(tokens, ";")[:-1] #last line is empty
     functions = list(map(build_tree, lines))
+    print("parsed")
+    for n in functions:
+        print(n)
     return functions
