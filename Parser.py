@@ -47,12 +47,10 @@ def build_function(func_call): #builds a function tuple, e.g: ("primitive", [fun
 
 import sys #only place it's used is in this function so i put it here for readability
 def build_tree(li): #builds a full function definition, i.e: ["=", f(x), x] (but it would be parsed)
-    print("li=",li)
     if li[0] == "data":
-        tmp = ["data", li[1]]
+        tmp = ["data", li[1], []]
         for n in split_lines(li[3:], "|"):
-            print("found n", n)
-            tmp.append(build_function(n))
+            tmp[2].append(build_function(n))
         return tmp
     else:
         try:
@@ -65,7 +63,4 @@ def build_tree(li): #builds a full function definition, i.e: ["=", f(x), x] (but
 def Parse(tokens):
     lines = split_lines(tokens, ";")[:-1] #last line is empty
     functions = list(map(build_tree, lines))
-    print("parsed")
-    for n in functions:
-        print(n)
     return functions

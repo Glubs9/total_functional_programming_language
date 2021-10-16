@@ -7,6 +7,10 @@ from functools import reduce
 
 #global_scope contains a function name mapped to a list of Function objects.
 global_scope = defaultdict(lambda: [])
+data_arities = {} #all data constructors act the same so a function definition is unecersarry. What
+                    #is necersarry is an arity recording
+type_constructors = {} #different ttypes need to have their data constructors associated. This might
+                         #have to be done in semantics checking
 
 #not 100% oo but it aids readability
 class Function:
@@ -40,8 +44,16 @@ def construct_args(args_in):
 #IC == Intermediate Code
 def define_functions(IC):
     for n in IC: 
-        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
+        if n[0] == "define".upper(): 
+            global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
         #tuple repr is a little ugly
+
+#ADD DATA FUNCTIONS HERE AND DOUBLE CHECK DATA DOESNT CALL ONLY ONE
+def define_data(IC): #data constructors being defined. Not data class. This naming system is a little confusing.
+    for n in IC:
+        if n[0] == "data".upper():
+            for i in n[2]:
+                data_arities[i[0][1] if type(i[0]) is tuple else i[0]] = len(i) - 1 #little ick but it will do
 
 #calculates the depth of unary arithmetic. Useful in outputting the results of a file.
 def depth(data: Data): #type data from execute.py
@@ -266,6 +278,8 @@ def run():
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     define_functions(IC)
+    define_data(IC)
+    print("data arities are now", data_arities)
     if execute:
         s = Stack([], []) #, False)
         stacks.append(s)

@@ -9,6 +9,7 @@ from PrimitiveChecker import Primitive_Checker
 from StructuralChecker import Structural_Checker
 
 def Semantics_Checker(functions): #note, called functions don't return bools, they error the program separately
+    return functions #done here to skip semantics checking for dbeugging
     Bottom_Checker(functions)
     prim_funcs = [n for n in functions if n[1][0] == "primitive"]
     #Depth_Checker(prim_funcs)
