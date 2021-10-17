@@ -4,7 +4,8 @@
 This is written in python and does not need any external libraries or installations.
 To run the program, make sure you have python downloaded and installed. Then download the repo.
 To run any code you write, put in python3 Main.py [file_name]    
-A repl comes preinstalled which can be opened with python3 Main.py repl
+A repl comes preinstalled which can be opened with python3 Main.py repl.
+if you want to load a file and enter repl you can run python3 Main.py [file_name] repl.
 
 # Tutorial
 [Language Design Doc](https://docs.google.com/document/d/1RcecCvSwV43WCeCUSMUChC1xEJVVtFZClC1rhoPUaRE/edit?usp=sharing) <br>
@@ -27,6 +28,10 @@ Primitive functions are defined using structural recursion ala coq. Please refer
 understand the restrictions. (note: I have not checked how mutual recursion works in coq or other
 		total funcitonal programming languages so, just for now maybe? I have caused
 		primitive recursive functions to error when mututal recursion is done).
+
+Totality in the primitive recursive functions are checked against the data type used. Not every
+type. You would only need to cover all of the number cases rather than all cases. Currently no other 
+type inference / type checking is performed. This will probably just error out. Be careful.
 
 You can also do commenting using /\* and \*/
 

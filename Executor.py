@@ -298,4 +298,5 @@ def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute
 def purge():
     global stacks
     stacks = []
-    del global_scope["main"]
+    if "main" in global_scope:
+        del global_scope["main"]

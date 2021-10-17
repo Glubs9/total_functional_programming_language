@@ -9,16 +9,20 @@ import sys
 stdlib_str = open("stdlib.tfpl", "r").read()
 Run(stdlib_str, False) #do not execute main function
 
-if len(sys.argv) != 2:
+if not (len(sys.argv) == 2 or len(sys.argv) == 3):
     print("wrong number of arguments passed / Please pass a file")
     sys.exit()
 
 if sys.argv[1] == "repl":
     Repl()
 else:
+    #could probably de-embed this
     inp_file = open(sys.argv[1]).read()
-    out = Run(inp_file)
-
-    print("the output of running main{} in file " + sys.argv[1] + " is: ")
-    print(out)
-    print("with a depth of", depth(out))
+    if len(sys.argv) == 3:
+        out = Run(inp_file, False)
+        Repl()
+    else:
+        out = Run(inp_file)
+        print("the output of running main{} in file " + sys.argv[1] + " is: ")
+        print(out)
+        print("with a depth of", depth(out))

@@ -3,6 +3,8 @@ from Executor import purge
 
 #bit hardcoded but it kinda has to be
 def Repl():
+    purge()
+    
     print("welcome to the repl")
     print("use an empty line to exit the repl")
     print()
