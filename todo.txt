@@ -1,9 +1,9 @@
 4. see if you can get that logic programming idea sorted
 5. check destroy doesn't exist in any primitive function
-7. RE ADD SEMANTICS CHECKING ITS CURRENTLY DISABLSED
+7. more semantics checking stuff
 	a. check that data constructors are unique
 	b. check that data constructors do not embed themselves
-	c. update to handle data with longer arities
+	c. check arities of functions and constructors
 8. optimize semantics checker so it only runs analysis once and uses that analysi sa whole bunch
 	a. maybe, think about it later.
 	b also maybe integrate the semantics checker and the executor.
