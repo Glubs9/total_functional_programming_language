@@ -8,8 +8,6 @@ from functools import reduce
 global_scope = defaultdict(lambda: [])
 data_arities = {} #all data constructors act the same so a function definition is unecersarry. What
                     #is necersarry is an arity recording
-type_constructors = {} #different ttypes need to have their data constructors associated. This might
-                         #have to be done in semantics checking
 
 #not 100% oo but it aids readability
 class Function:
@@ -61,7 +59,6 @@ def define_data(IC): #data constructors being defined. Not data class. This nami
     #yikes need to re-write this or delete it
 def depth(data: Data): #type data from execute.py
     if data.name == "!": return -1
-    if data.name == "0": return 0
     elif len(data.data) == 0: return 0
     else: return max(map(lambda n: n+1, map(depth, data.data))) #data.data is ugly naming, change later
 
@@ -278,12 +275,10 @@ def run():
         i+=1
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
-        it+=1
-        if it % 1000000 == 0:
-            print(it, ":", len(stacks[i].call_stack))
+        #it+=1
         #debug_stacks(stacks, it)
 
-    print("finished!") #unecersarry but very fun :)
+    #print("finished!") #unecersarry but very fun :)
     #debug_stacks(stacks, it+1)
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
@@ -298,3 +293,9 @@ def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute
         return s.data_stack[0] #IMPORTANT: CHANGE LATER
     else:
         return None #little risky so make sure all calls to execute are properly checked
+
+#used in the repl
+def purge():
+    global stacks
+    stacks = []
+    del global_scope["main"]

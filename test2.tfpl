@@ -1,0 +1,1 @@
+main{} = if(true, list[0, end], s[s[s[0]]]);

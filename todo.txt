@@ -13,3 +13,13 @@ types.
 	b. means that you have to have a list type in the second half.
 	c. this would be very good and kind of important to do.
 	d. althoguh it would require finding the rturn types of functions
+
+
+10. more complex type inference
+	a. like a simplified hindley milner without polymorphism.
+	b. like we can look at the argumnet functions' types nd build an inference search aroudn
+	that.
+	c. although that's a little odd and we would have to re-write the type checker it's a nifty idea.
+
+12. add file loading?
+13. add strings? (or a character type)

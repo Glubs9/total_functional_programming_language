@@ -1,9 +1,29 @@
 data num = s[num] | 0;
-data list = cons[a,list] | end;
+data list = list[a,list] | end;
+data pair = cons[a, b];
+data bool = true | false;
 
-test() = s[s[0]];
+/* misc combinators */
 id(a) = a;
 
+/* boolean functions */
+not(true) = false;
+not(false) = true;
+
+and(false, a) = false; /* doesn't type check but it's whatever */
+and(true, true) = true;
+and(true, false) = false;
+
+or(true, a) = true;
+or(false, true) = true;
+or(false, false) = false;
+
+xor(a, b) = and(or(a,b), not(and(a,b)));
+
+if(true, a, b) = a; /* maybe not works with non-prim? also very unoptimized for primitive. Change later */
+if(false, a, b) = b;
+
+/* number functions (re-write later) */
 proj(a, b, c) = b;
 s_proj(a, b, c) = s[proj(a,b,c)];
 plus(0, b) = id(b);
@@ -34,7 +54,10 @@ ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
-car(end) = end;
-car(cons[a,b]) = a;
-cdr(end) = end;
-cdr(cons[a,b]) = b;
+/* list functions */
+
+head(end) = end;
+head(list[a,b]) = a;
+tail(end) = end;
+tail(list[a,b]) = b;
+
