@@ -13,6 +13,6 @@ make_list(a,b) = cons[a,b];
 data btree = branch[a,btree,btree] | leaf[a];
 
 dfs(leaf[a]) = a;
-dfs(branch[a,t1,t2]) = dfs(branch[a,t1,t2]);
+dfs(branch[a,t1,t2]) = dfs(t1);
 
 main{} = car(cdr(make_list(s[s[s[s[0]]]], make_list(s[s[s[0]]], s[s[0]]))));
