@@ -9,13 +9,17 @@ from sys import exit
 from collections import defaultdict
 
 #entry funciton
-def Total_Checker(functions):
+def Total_Checker(functions, data):
     gf = group_functions(functions) #groups functions by function name
+    data_list = [build_data_list(n[2]) for n in data]
     for key, val in gf:
-        if not check_func(list(val)):
+        if not check_func(list(val), data_list):
             print("error: function \"".upper() + str(key) + "\" is not total".upper())
             exit()
     return functions
+
+def build_data_list(data):
+    return [n[1] if type(n) is tuple else n[0] for n in data]
     
 #groups functions by function name
 def group_functions(functions):
@@ -35,33 +39,31 @@ def get_args(function):
 #check arity of functions are all the same
     #and converts all generic args (a, b, x,..) to be called "generic" to make coding easier and more readable later on
         #note: this should be moved out of this function at a later date
-def check_func(functions):
-
-    #type check here
-    #discover like all of the possible ones
-
+def check_func(functions, data_list):
     args = list(map(get_args, functions))
-    #check for empty args
     if args == [[[]]]: return True #function with no args being passed is always true
-    args = list(map(lambda n: list(map(generic_def, n)), args)) #converts all generic args to the same symbol
-    return check_args(args) #might be able to inline
+    args = list(map(lambda n: list(map(lambda i: generic_def(i, data_list), n)), args)) #converts all generic args to the same symbol
+    return check_args(args, data_list) #might be able to inline
+
+def in_data_list(string, data_list):
+    for n in range(len(data_list)):
+        if string in data_list[n]: return True
+    return False
 
 #converts a single function call/definition to have generic arguments
-def generic_def(arg):
+def generic_def(arg, data_list):
     if type(arg) is tuple:
-        return (arg[0], arg[1], [generic_def(arg[2][0])]) #successor
+        return (arg[0], arg[1], list(map(lambda n: generic_def(n, data_list), arg[2])))
     elif type(arg) is list and len(arg) == 0: return arg
-    elif type(arg) is list and arg[0] == "!":
-        return ["!"]
-    elif type(arg) is list and arg[0] == "0":
-        return ["0"]
+    if type(arg) is list and in_data_list(arg[0], data_list):
+        return arg
     elif type(arg) is list and type(arg[0]) is str:
         return ["generic"] #convert to generic
     else:
         raise Exception("totality checker generic def encountered unknown case")
 
 #main function that checks the arguments are total
-def check_args(args):
+def check_args(args, data_list):
     if len(args) == 0: raise Exception("error: empty args passed to check args function".upper())
     elif len(args[0]) == 0: return True #no arguments (might end up being an error, not tested)
 
@@ -75,7 +77,7 @@ def check_args(args):
     #if that is false return false
     for i in args:
         next_args = list(map(lambda n: n[1:], i))
-        if not check_args(next_args): return False
+        if not check_args(next_args, data_list): return False
     return True
 
 #checks a single argument list
@@ -83,6 +85,8 @@ def check_args(args):
 def check_arg(arg):
     if len(arg) == 0: return True #empty function is total
     if len(get_args_with_name(arg, "generic")) != 0: return True #generic arg exists
+    #
+
     zeros = get_args_with_name(arg, "0")
     if len(zeros) == 0: return False #no zeros
     elif len(zeros) == len(arg): return False #only zero cases
