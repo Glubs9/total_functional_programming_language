@@ -35,5 +35,6 @@ def structure_check(func, func_name, depth):
     elif func[1] == func_name: 
         for n in func[2]:
             if type(n) is tuple and n[0] != "data-constructor": return False #maybe double chekc the chck
-        return sum(map(lambda n: data_depth(n), func[2])) < depth
-    else: return all(map(lambda n: structure_check(n, func_name, depth), func[2]))
+        return data_depth(func[2]) < depth
+    else: 
+        return all(map(lambda n: structure_check(n, func_name, depth), func[2]))

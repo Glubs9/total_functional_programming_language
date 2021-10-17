@@ -34,5 +34,7 @@ ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
+car(end) = end;
 car(cons[a,b]) = a;
+cdr(end) = end;
 cdr(cons[a,b]) = b;
