@@ -6,3 +6,10 @@
 	c. update to handle data with longer arities
 8. optimize semantics checker so it only runs analysis once and uses that analysi sa whole bunch
 	a. maybe, think about it later.
+	b also maybe integrate the semantics checker and the executor.
+9. see if we can write the semantics checker to only allow construction of objects from correct
+types.
+	a. like we do data list = cons[a,list] | end;
+	b. means that you have to have a list type in the second half.
+	c. this would be very good and kind of important to do.
+	d. althoguh it would require finding the rturn types of functions
