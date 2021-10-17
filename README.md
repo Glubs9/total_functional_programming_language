@@ -3,7 +3,8 @@
 # Installation
 This is written in python and does not need any external libraries or installations.
 To run the program, make sure you have python downloaded and installed. Then download the repo.
-To run any code you write, put in python Main.py [file_name].
+To run any code you write, put in python3 Main.py [file_name]    
+A repl comes preinstalled which can be opened with python3 Main.py repl
 
 # Tutorial
 [Language Design Doc](https://docs.google.com/document/d/1RcecCvSwV43WCeCUSMUChC1xEJVVtFZClC1rhoPUaRE/edit?usp=sharing) <br>
