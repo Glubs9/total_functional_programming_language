@@ -1,3 +1,5 @@
+#note: This file is not used anymore. We have evoled to structural recursion
+
 from sys import exit
 from collections import defaultdict
 from functools import reduce #still don't get why this isn't stdlib
