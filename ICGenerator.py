@@ -13,7 +13,10 @@ def func_call_gen(arr_in):
         ))
 
 def stackify_line(line_in):
-    return ("DEFINE", func_call_gen(line_in[1]), func_call_gen(line_in[2]))
+    if line_in[0] == "=":
+        return ("DEFINE", func_call_gen(line_in[1]), func_call_gen(line_in[2]))
+    elif line_in[0] == "data":
+        return ("DATA", line_in[1], list(map(func_call_gen, line_in[2])))
 
 def Generate_IC(lines_in):
     return list(map(stackify_line, lines_in))

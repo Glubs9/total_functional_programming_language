@@ -1,5 +1,4 @@
-#executes code.
-    #another thing it does is build the internal symbol dictionary from func name to definition, which can be done without executing the code.
+#executes code.  #another thing it does is build the internal symbol dictionary from func name to definition, which can be done without executing the code.
 
 from collections import defaultdict
 from sys import exit
@@ -7,6 +6,10 @@ from functools import reduce
 
 #global_scope contains a function name mapped to a list of Function objects.
 global_scope = defaultdict(lambda: [])
+data_arities = {} #all data constructors act the same so a function definition is unecersarry. What
+                    #is necersarry is an arity recording
+type_constructors = {} #different ttypes need to have their data constructors associated. This might
+                         #have to be done in semantics checking
 
 #not 100% oo but it aids readability
 class Function:
@@ -15,7 +18,7 @@ class Function:
         self.definition = definition
         self.primitive = primitive #boolean to tell if function is primitive or not
     def __str__(self):
-        return "function: " + " ,".join(map(str, self.arguments)) + " : " + str(self.definition) + " is " + str(self.primitive)
+        return "function: " + ", ".join(map(str, self.arguments)) + " : " + str(self.definition) + " is " + str(self.primitive)
 
 #not 100% oo but it aids readability
 class Data:
@@ -23,7 +26,7 @@ class Data:
         self.name = name
         self.data = data
     def __str__(self):
-        return self.name + "[" + " ,".join(map(str, self.data)) + "]"
+        return self.name + "[" + ", ".join(map(str, self.data)) + "]"
 
 #constructs args for a function object
     #as args are an ic constructing the arguments, rather than the actual arguments.
@@ -32,21 +35,34 @@ class Data:
 def construct_args(args_in):
     args = []
     for n in reversed(args_in[1:]):
-        if type(n) is not tuple: args.append(Data(n, []))
-        elif n[0] != "data-constructor": raise Exception("non data constructor in argument definition") #should be moved to semantics checker
-        else: args.append(Data(n[1], [args.pop()])) #change later to handle multi arg constructors for custom types
+        if type(n) is not tuple: 
+            args.append(Data(n, []))
+        elif n[0] != "data-constructor": 
+            raise Exception("non data constructor in argument definition") #should be moved to semantics checker
+        else: 
+            args.append(Data(n[1], [args.pop() for _ in range(data_arities[n[1]])])) #change later to handle multi arg constructors for custom types
     return args
 
 #IC == Intermediate Code
 def define_functions(IC):
     for n in IC: 
-        global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
+        if n[0] == "define".upper(): 
+            global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
         #tuple repr is a little ugly
 
+#ADD DATA FUNCTIONS HERE AND DOUBLE CHECK DATA DOESNT CALL ONLY ONE
+def define_data(IC): #data constructors being defined. Not data class. This naming system is a little confusing.
+    for n in IC:
+        if n[0] == "data".upper():
+            for i in n[2]:
+                data_arities[i[0][1] if type(i[0]) is tuple else i[0]] = len(i) - 1 #little ick but it will do
+
 #calculates the depth of unary arithmetic. Useful in outputting the results of a file.
+    #yikes need to re-write this or delete it
 def depth(data: Data): #type data from execute.py
     if data.name == "!": return -1
     if data.name == "0": return 0
+    elif len(data.data) == 0: return 0
     else: return max(map(lambda n: n+1, map(depth, data.data))) #data.data is ugly naming, change later
 
 #called in stdlib
@@ -67,8 +83,6 @@ def destroy_self(s):
 
 stdlib = {
         "id": lambda s: None, #id doesn't affect the stack so nothing happens (maybe change later)
-        "0": lambda s: s.data_stack.append(Data('0', [])), 
-        "s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
         "!": lambda s: s.data_stack.append(Data('!', [])),
         "print": id_print,
         "destroy": destroy,
@@ -77,8 +91,6 @@ stdlib = {
 #used in arg_count which is used later on
 stdlib_args = {
         "id": 1, #kinda? not in the implementation but in the theory or something
-        "0": 0,
-        "s": 1,
         "!": 0,
         "destroy": 0,
         "print": 1
@@ -102,21 +114,19 @@ def unify(definition, args):
     for n in definition: #could zip to ensure one loop but this is easier
         tmp = unify_single(n, args.pop())
         if tmp == False: return False
-        elif tmp == []: continue
-        out.append(tmp)
+        out += tmp
     return out
 
-#not pure
-    #hardcoded :(
 def unify_single(definition, arg): #unifies a single variable
-    if definition.name == "s" and arg.name == "s": return unify_single(definition.data[0], arg.data[0])
-    elif definition.name == "s" and arg.name != "s": return False
-    elif definition.name == "0" and arg.name == "0": return []
-    elif definition.name == "0" and arg.name != "0": return False
-    elif definition.name == "!" and arg.name == "!": return [] #have to specify that you unify with bottom
-    elif definition.name == "!" and arg.name != "!": return False
-    elif definition.name != "s": return (definition.name, arg) #check for non-snytacitcal definition
-    else: raise Exception("how did i get here?")
+    if definition.name in data_arities and definition.name != arg.name: return False
+    elif definition.name not in data_arities: return [(definition.name, arg)] #check for non syntactical definitions (idk what this means but Im pretty sure we check that in the semantics checker)
+    elif definition.name == arg.name and len(definition.data) != len(arg.data): return False
+    elif definition.name == arg.name: 
+        mapped = list(map(lambda n: unify_single(n[0], n[1]), zip(definition.data, arg.data)))
+        for n in mapped: 
+            if n == False: return False #can't use any or if not n due to auto type casting
+        return reduce(lambda n1,n2: n1+n2, mapped, [])
+    raise Exception("how did i get here?")
 
 #checks which case of the function definitions is matched and returns that function.
 def match_function(func_name, arguments):
@@ -133,6 +143,8 @@ def arg_count(func_name):
     if func_name in global_scope:
         tmp = global_scope[func_name][0] #assuming all functions have same arity
         return len(tmp.arguments)
+    elif func_name in data_arities:
+        return data_arities[func_name]
     elif func_name in stdlib:
         return stdlib_args[func_name] #defined earlier in the file
     else:
@@ -164,10 +176,20 @@ def handle_var(name, scope, stack):
     for n in scope: 
         if n[0] == name: stack.data_stack.append(n[1])
 
+"""
+"0": lambda s: s.data_stack.append(Data('0', [])), 
+"s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
+"""
+def call_data(func_name, s):
+    data_vals = []
+    for n in range(data_arities[func_name]): data_vals.append(s.data_stack.pop()) #Might be able to simplify?
+    s.data_stack.append(Data(func_name, data_vals))
+
 #handles calling either stdlib, user_defined func or variable
 def call_func(func_name, scope, stack, func_call): #although this function is simple, writing any more would be a violation of single function single responsibility
     #check for func_name in scope
     if var_in_scope(func_name, scope): handle_var(func_name, scope, stack)
+    elif func_name in data_arities: call_data(func_name, stack)
     elif func_name in stdlib: call_stdlib(func_name, stack, func_call)
     else: call_user_defined_func(func_name, stack)
 
@@ -265,6 +287,7 @@ def run():
     #debug_stacks(stacks, it+1)
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
+    define_data(IC)
     define_functions(IC)
     if execute:
         s = Stack([], []) #, False)

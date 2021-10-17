@@ -20,7 +20,7 @@ The function definition can be made of a function call or a variable or a litera
 arguments to each function being recursively defined (another function call, variable or literal).       
 You can also pattern match on function arguments with successor calls, i.e: minusone(s[a]) = a;     
 You can also define a function multiple times, where it will call the highest succeeded matching
-definition, ala ml. (see definitions in stdlib.tfpl for examples).     
+definition, ala ml (see definitions in stdlib.tfpl for examples).     
 
 Primitive functions are defined using structural recursion ala coq. Please refer to that system to
 understand the restrictions. (note: I have not checked how mutual recursion works in coq or other
@@ -42,6 +42,15 @@ bottom value branch finishes, the bottom value branch is deleted and as are all 
 In practice this does not come up much with purely unary arithmetic. As more functionality is added
 this will become more important. Also note: you cannot pattern match bottom in primitive recursive functions.    
 ![graph not found](not_program.png)
+
+#### user defined data
+latsly, you can define user defined data using the following syntax.
+data TYPE-NAME = CONSTRUCTOR-NAME\[var1, var2, var3, ...] | CONSTRUCTOR-NAME2\[var1, ...] | ...;
+There is a shorthand for 0 arity where the square brackets are not needed.
+note: you cannot embed data inside itself. i.e: outer\[a, inner\[b], c] will break the interpreter.
+the nomenclature of the types in the definition is techincally arbitrary. I plan to fix this later.
+But for now, it is purely aesthetic. Although please try to keep to that aesthetic otherwise it
+breaks stuff.
 
 #### examples
 If you would like further examples please refer to stdlib.tfpl.     
