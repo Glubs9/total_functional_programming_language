@@ -1,13 +1,8 @@
-3. general testing, definitely around splitting and the such
 4. see if you can get that logic programming idea sorted
 5. check destroy doesn't exist in any primitive function
-6. ml esque algebra
-	1. lexer defined like this data n = name1[type,type,...] | name2[type,type,...] | ...; 
-	b. now all we need to do is update call_user_deefined_func to enable running longer arities
-		and we should be gravy
-
-	c. fix line 120
-
 7. RE ADD SEMANTICS CHECKING ITS CURRENTLY DISABLSED
 	a. check that data constructors are unique
 	b. check that data constructors do not embed themselves
+	c. update to handle data with longer arities
+8. optimize semantics checker so it only runs analysis once and uses that analysi sa whole bunch
+	a. maybe, think about it later.
