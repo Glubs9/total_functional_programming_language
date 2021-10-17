@@ -1,5 +1,5 @@
-data Num = s[Num] | 0;
-data List = List[a,List] | end;
+data num = s[num] | 0;
+data list = cons[a,list] | end;
 
 test() = s[s[0]];
 id(a) = a;
@@ -33,3 +33,6 @@ minus(s[n],x) = pred_proj(n,minus(n,x),x);
 ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
+
+car(cons[a,b]) = a;
+cdr(cons[a,b]) = b;

@@ -8,8 +8,6 @@ zero() = 0;
 print_ack(0) = zero();
 print_ack(s[a]) = ack_print(a, print_ack(a));
 
-car(list[a,b]) = a;
-cdr(list[a,b]) = b;
-cons(a,b) = list[a,b];
+make_list(a,b) = cons[a,b];
 
-main{} = cdr(cons(s[s[s[0]]], s[s[0]]));
+main{} = car(cdr(make_list(s[s[s[s[0]]]], make_list(s[s[s[0]]], s[s[0]]))));
