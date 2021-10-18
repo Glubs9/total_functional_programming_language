@@ -4,7 +4,6 @@ data maybe = just[a] | nothing;
 
 /* misc combinators, not too many cause higher order functions are not supported */
 id(a) = a;
-absurd{} = !;
 
 /* boolean functions */
 data bool = true | false;
@@ -22,6 +21,7 @@ or(false, false) = false;
 
 xor(a, b) = and(or(a,b), not(and(a,b)));
 nand(a, b) = not(and(a,b));
+impl(a, b) = not(and(a, not(b)));/* implies */
 
 if(true, a, b) = a; /* maybe not works with non-prim? also very unoptimized for primitive. Change later */
 if(false, a, b) = b;
@@ -52,10 +52,26 @@ ack{0, n} = s[n];
 ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
+/* comparisons */
+/* abbreviations used for comparisons. eq == equals et cetera */
+eq(0, 0) = true;
+eq(0, s[a]) = false;
+eq(s[a], 0) = false;
+eq(s[a], s[b]) = eq(a, b);
+
 lt(0, 0) = false;
-lt(0, a) = true;
-lt(s[a], s[b]) = lt(a, b);
+lt(0, s[b]) = true;
 lt(s[a], 0) = false;
+lt(s[a], s[b]) = lt(a, b);
+
+gt(0, 0) = false;
+gt(0, s[b]) = false;
+gt(s[a], 0) = true;
+gt(s[a], s[b]) = gt(a, b);
+
+/* lte = less than or equal */
+lte(a,b) = not(lt(a,b));
+gte(a,b) = not(lt(a,b));
 
 /* list functions */
 data list = list[a,list] | end;
@@ -65,3 +81,11 @@ head(list[a,b]) = a;
 tail(end) = end;
 tail(list[a,b]) = b;
 
+sum(end) = 0; /* this stuff makes me feel like polymorphic type checking is important */
+sum(list[n, tail]) = plus(n, sum(tail));
+
+any(end) = false;
+any(list[n, tail]) = if(n, true, any(tail)); /* not strictly a normal definition but cool tho */
+
+all(end) = true;
+all(list[n, tail]) = and(n, all(tail));

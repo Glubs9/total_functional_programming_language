@@ -6,12 +6,13 @@
 from sys import exit
 
 def PreProcess(str_in):
+    str_in = remove_comments(str_in)
     if not check_brackets(str_in):
         print("error: unbalanced brackets or mismatched brackets".upper())
         exit()
     elif not check_balanced_semicolons(str_in):
         print("error: non-matching amount of semi-colons and definitions".upper())
-    return remove_comments(str_in)
+    return str_in
 
 brackets = {"(" : ")", "{" : "}", "[" : "]"}
 opening = {k for k,v in brackets.items()} #maybe a little unecersarry but renaming makes it more readable

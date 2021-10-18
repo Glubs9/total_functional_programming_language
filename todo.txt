@@ -23,3 +23,8 @@ types.
 
 12. add file loading?
 13. add strings? (or a character type)
+
+14. re add mutual recursion checker
+	a. we can do it by either disabling it or by allowing structural recursion between the
+	mutual recursion
+	b. we just disable it for now

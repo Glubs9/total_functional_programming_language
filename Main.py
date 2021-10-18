@@ -4,6 +4,7 @@
 
 from Run import Run
 from Repl import Repl
+from Executor import depth
 import sys
 
 stdlib_str = open("stdlib.tfpl", "r").read()
