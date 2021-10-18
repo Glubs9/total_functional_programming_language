@@ -275,7 +275,7 @@ def run():
         i+=1
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
-        #it+=1
+        it+=1
         #debug_stacks(stacks, it)
 
     #print("finished!") #unecersarry but very fun :)

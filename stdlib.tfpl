@@ -26,6 +26,8 @@ impl(a, b) = not(and(a, not(b)));/* implies */
 if(true, a, b) = a; /* maybe not works with non-prim? also very unoptimized for primitive. Change later */
 if(false, a, b) = b;
 
+beq(a, b) = not(xor(a,b)); /* boolean equals */
+
 /* number functions */
 data num = s[num] | 0;
 
@@ -53,11 +55,11 @@ ack{s[m], 0} = ack{m, s[0]};
 ack{s[m], s[n]} = ack{m, ack{s[m], n}};
 
 /* comparisons */
-/* abbreviations used for comparisons. eq == equals et cetera */
-eq(0, 0) = true;
-eq(0, s[a]) = false;
-eq(s[a], 0) = false;
-eq(s[a], s[b]) = eq(a, b);
+/* abbreviations used for comparisons. neq == number equals et cetera */
+neq(0, 0) = true; 
+neq(0, s[a]) = false;
+neq(s[a], 0) = false;
+neq(s[a], s[b]) = neq(a, b);
 
 lt(0, 0) = false;
 lt(0, s[b]) = true;
@@ -81,6 +83,11 @@ head(list[a,b]) = a;
 tail(end) = end;
 tail(list[a,b]) = b;
 
+leq(end, end) = true; /* list equals */
+leq(list[_, __], end) = false;
+leq(end, list[_, __]) = false;
+leq(list[h1,t1], list[h2,t2]) = if(neq(h1,h2), leq(t1, t2), false);
+
 sum(end) = 0; /* this stuff makes me feel like polymorphic type checking is important */
 sum(list[n, tail]) = plus(n, sum(tail));
 
@@ -89,3 +96,19 @@ any(list[n, tail]) = if(n, true, any(tail)); /* not strictly a normal definition
 
 all(end) = true;
 all(list[n, tail]) = and(n, all(tail));
+
+/* this has to be the slowest way to sort a list outside of bogosort. has to go through every
+ * possibility and iterate down every single number ever comparison */
+bubble_it(end) = end;
+bubble_it(list[h,end]) = list[h,end];
+bubble_it(list[a, list[b, t]]) = if(
+	lt(a,b), 
+	list[a, bubble_it(list[b, t])],
+	list[b, bubble_it(list[a, t])]
+);
+
+/* bubble_sort is while loop so we have to make it non-prim */
+/* let statement would double the speed but it requires more effort from me lol */
+/* bubble sort doesn't work :( */
+/* god this idea is falling apart */
+bubble_sort{l} = if(leq(bubble_it(l), l), l, bubble_sort{print(bubble_it(l))});
