@@ -78,19 +78,24 @@ def destroy_self(s):
             destroy_stack(n)
             break
 
+def if_func(stack):
+    pass
+
 stdlib = {
         "id": lambda s: None, #id doesn't affect the stack so nothing happens (maybe change later)
         "!": lambda s: s.data_stack.append(Data('!', [])),
         "print": id_print,
         "destroy": destroy,
-        "destroy_self": destroy_self
+        "destroy_self": destroy_self,
+        "if": if_func
 }
 #used in arg_count which is used later on
 stdlib_args = {
         "id": 1, #kinda? not in the implementation but in the theory or something
         "!": 0,
         "destroy": 0,
-        "print": 1
+        "print": 1,
+        "if": 3
 }
 
 def call_stdlib(func_name, stack, func_call):
@@ -190,6 +195,15 @@ def call_func(func_name, scope, stack, func_call): #although this function is si
     elif func_name in stdlib: call_stdlib(func_name, stack, func_call)
     else: call_user_defined_func(func_name, stack)
 
+def check_if(stack):
+    print("stack=", stack)
+    if len(stack.call_stack) >= 3:
+        if type(stack.call_stack[-3][1]) is tuple and stack.call_stack[-3][1][1] == "if":
+            raise Exception("if statement called".upper())
+
+def run_if(stack):
+    pass
+
 #should and probably could move stack stuff to separate file
 class Stack:
     def __init__(self, call_stack, data_stack):
@@ -259,27 +273,32 @@ def run():
 
     i = 0 #stack index
     while (stacks[i].call_stack != []):
-        tmp = stacks[i].call_stack.pop()
-        if type(tmp[1]) is str: #yikes I need to fix this
-            call_func(tmp[1], tmp[0], stacks[i], tmp)
+
+        #this is an extra thing only so far used with if but may be extended to other things later
+        if check_if(stacks[i]):
+            run_if(stacks[i])
         else:
-            if tmp[2] == "primitive" and tmp[1][0] == "non-primitive":
-                new_stack(stacks[i])
-                ac = arg_count(tmp[1][1])
-                [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
-                stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
-                i+=1 #stack index
-                stacks[i].call_stack.append(([], ("primitive", "destroy", 0), "primitive"))
-            call_func(tmp[1][1], tmp[0], stacks[i], tmp)
+            tmp = stacks[i].call_stack.pop()
+            if type(tmp[1]) is str: #yikes I need to fix this
+                call_func(tmp[1], tmp[0], stacks[i], tmp)
+            else:
+                if tmp[2] == "primitive" and tmp[1][0] == "non-primitive":
+                    new_stack(stacks[i])
+                    ac = arg_count(tmp[1][1])
+                    [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
+                    stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
+                    i+=1 #stack index
+                    stacks[i].call_stack.append(([], ("primitive", "destroy", 0), "primitive"))
+                call_func(tmp[1][1], tmp[0], stacks[i], tmp)
 
         i+=1
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
         it+=1
-        #debug_stacks(stacks, it)
+        debug_stacks(stacks, it)
 
     #print("finished!") #unecersarry but very fun :)
-    #debug_stacks(stacks, it+1)
+    debug_stacks(stacks, it+1)
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     define_data(IC)
