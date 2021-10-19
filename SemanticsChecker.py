@@ -9,6 +9,7 @@ from PrimitiveChecker import Primitive_Checker
 from StructuralChecker import Structural_Checker
 from ArityChecker import Arity_Checker
 from CircularChecker import Circular_Checker
+from TypeChecker import Type_Checker
 
 def Semantics_Checker(ast): #note, called functions don't return bools, they error the program separately
     functions = [n for n in ast if n[0] == "="] #remove the data constructors
@@ -19,6 +20,7 @@ def Semantics_Checker(ast): #note, called functions don't return bools, they err
     #write depth checker thing that checks recursive functions
     Structural_Checker(prim_funcs)
     Total_Checker(prim_funcs, data) #might have been better to put in the executor after analysis
+    Type_Checker(prim_funcs, data)
     Arity_Checker(prim_funcs, data)
     Circular_Checker(prim_funcs)
     #Primitive_Checker(prim_funcs)

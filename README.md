@@ -86,3 +86,7 @@ I am getting infinites in my non-prim functions when using the if function
 	includes the if function. Normally if functions are lazily evaluated to enable proper
 	recursion. As of right now i don't have the time to fix it. This will be fixed later but I
 	just can't right now. Please be patient.
+I am getting non-specific errors about properties of primitive functions
+	- This could be a lot of things but one of the ones I think you might run in to is that this
+	language has a very strict naming schema. If you use a predefined word anywhere in the code
+	at all (variable names, argument names, anything) it should error out. Be careful
