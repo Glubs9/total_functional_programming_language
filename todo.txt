@@ -30,3 +30,6 @@ types.
 15. add check to make sure only one type is used in each function
 
 16. check functions are called with right brackts
+
+17. update repl to allow history and stuff
+	a. might require a package maybe?
