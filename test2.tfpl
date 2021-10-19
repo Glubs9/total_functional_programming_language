@@ -1,3 +1,3 @@
 test_list() = list[s[s[0]], list[s[0], list[0, list[s[s[s[s[0]]]], list[s[0], end]]]]];
 
-main{} = sum(test_list());
+main{} = inf(s[s[s[0]]]);

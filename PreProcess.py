@@ -12,6 +12,7 @@ def PreProcess(str_in):
         exit()
     elif not check_balanced_semicolons(str_in):
         print("error: non-matching amount of semi-colons and definitions".upper())
+        exit()
     return str_in
 
 brackets = {"(" : ")", "{" : "}", "[" : "]"}
@@ -30,5 +31,5 @@ def check_balanced_semicolons(str_in):
     return len([n for n in str_in if n == ";"]) == len([n for n in str_in if n == "="]) 
 
 import re
-def remove_comments(str_in):
+def remove_comments(str_in): #regular expression causes error with embedded comments. Fix them later
     return re.sub("/\*.*?\*/", "", str_in, flags=re.DOTALL)

@@ -1,6 +1,7 @@
 /* misc data definitions (other definitions exist in their given sections) */
 data pair = cons[a, b];
 data maybe = just[a] | nothing;
+data unit = unit;
 
 /* misc combinators, not too many cause higher order functions are not supported */
 id(a) = a;
@@ -97,6 +98,8 @@ any(list[n, tail]) = if(n, true, any(tail)); /* not strictly a normal definition
 all(end) = true;
 all(list[n, tail]) = and(n, all(tail));
 
+/* doesn't work :( */
+
 /* this has to be the slowest way to sort a list outside of bogosort. has to go through every
  * possibility and iterate down every single number ever comparison */
 bubble_it(end) = end;
@@ -107,8 +110,42 @@ bubble_it(list[a, list[b, t]]) = if(
 	list[b, bubble_it(list[a, t])]
 );
 
-/* bubble_sort is while loop so we have to make it non-prim */
-/* let statement would double the speed but it requires more effort from me lol */
-/* bubble sort doesn't work :( */
-/* god this idea is falling apart */
-bubble_sort{l} = if(leq(bubble_it(l), l), l, bubble_sort{print(bubble_it(l))});
+/* due to some issues with evalulation. I have added an extra primitive parameter to bubble sort
+ * which acts as an upper bound for the amount of iterations. Later this will be made into a
+ * non-prim function when if is fixed (it's also quite slow due to let not being implemented as well) */
+	/* although the fact that we can chuck an upper bound on the iteration and have it become
+	 * provably terminating is really cool. Kind of a real, more intuitive example of these kinds of 
+	 * termination proofs */
+	/* doesn't work :( */
+/*
+bubble_prim(l, 0) = l;
+bubble_prim(l, s[a]) = if(
+	leq(l, bubble_it(l)),
+	l,
+	bubble_prim(bubble_it(l), a)
+);
+*/
+
+/* slow :( */
+concat(end, l) = l;
+concat(list[h,t], l) = list[h, concat(t, l)];
+
+filter_less_than(end, n) = end;
+filter_less_than(list[h,t], n) = if(
+	lt(h, n),
+	list[h, filter_less_than(t, n)],
+	filter_less_than(t, n)
+);
+
+filter_greater_than(end, n) = end;
+filter_greater_than(list[h,t], n) = if(
+	gte(h, n),
+	list[h, filter_greater_than(t, n)],
+	filter_greater_than(t, n)
+);
+
+quick_sort{end} = end;
+quick_sort{list[h, t]} = concat(
+	quick_sort{filter_less_than(t, h)}, 
+	list[h, quick_sort{filter_greater_than(t, h)}]
+);

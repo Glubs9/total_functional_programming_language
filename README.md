@@ -75,3 +75,14 @@ this is a list of function within the standard library.
 	<li> ack{a, b} (returns the ackerrman function, this is not too useful but is a good example of a non-primitive function)</li>
 </ol>
 
+
+#### FAQ
+can the bottom type really be returned explicitly?
+	- I have my doubts about this. Although literally it shouldn't return and it doesn't
+	technically make sense. I think it works well for the purpose it is employed here. It works
+	well enough to ignore the obvious theoretic problems at least.
+I am getting infinites in my non-prim functions when using the if function
+	- due to time constraints and the like, this language is purely eagerly evalulated. This
+	includes the if function. Normally if functions are lazily evaluated to enable proper
+	recursion. As of right now i don't have the time to fix it. This will be fixed later but I
+	just can't right now. Please be patient.
