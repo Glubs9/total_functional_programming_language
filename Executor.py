@@ -3,11 +3,11 @@
 from collections import defaultdict
 from sys import exit
 from functools import reduce
+from ArityChecker import get_data_arities
 
 #global_scope contains a function name mapped to a list of Function objects.
 global_scope = defaultdict(lambda: [])
-data_arities = {} #all data constructors act the same so a function definition is unecersarry. What
-                    #is necersarry is an arity recording
+data_arities = get_data_arities() #all data constructors act the same so a function definition is unecersarry. What is necersarry is an arity recording
 
 #not 100% oo but it aids readability
 class Function:
