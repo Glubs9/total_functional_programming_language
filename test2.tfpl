@@ -1,8 +1,8 @@
-test_list() = list[s[s[0]], list[s[0], list[0, list[s[s[s[s[0]]]], list[s[0], end]]]]];
-
 multi(0) = 0;
 multi(s[a]) = 0;
 multi(end) = end;
 multi(list[h,t]) = h;
+
+test_list() = list[s[s[0]], list[s[0], list[0, list[s[s[s[s[0]]]], list[s[0], end]]]]];
 
 main{} = multi(0);

@@ -6,20 +6,29 @@
 
 from itertools import groupby
 from sys import exit
+import ast
 from collections import defaultdict
 
 #entry funciton
 def Total_Checker(functions, data):
     gf = group_functions(functions) #groups functions by function name
-    data_list = [build_data_list(n[2]) for n in data]
+    [build_data_list(n[2]) for n in data]
+    data_list = get_data_list()
     for key, val in gf:
         if not check_func(list(val), data_list):
             print("error: function \"".upper() + str(key) + "\" is not total".upper())
             exit()
     return functions
 
+memo = set() #data list brings in many files. need to add to data list every time
 def build_data_list(data):
-    return [n[1] if type(n) is tuple else n[0] for n in data]
+    global memo
+    memo.add(str([n[1] if type(n) is tuple else n[0] for n in data])) #str cause list unhasable
+    return None #shouldn't be used to get data. use get_data_list to get data
+
+def get_data_list():
+    global memo
+    return list(map(ast.literal_eval, memo)) #bit slow and bit yikes
     
 #groups functions by function name
 def group_functions(functions):
