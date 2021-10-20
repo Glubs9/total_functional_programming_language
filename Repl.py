@@ -14,40 +14,36 @@ def Repl():
     purge()
     
     print("welcome to the repl")
-    print("ctrl+d, ctrl+c or a blank line will exit")
+    print("ctrl+d will exit")
     print()
 
     str_in = get_input()
-    while str_in != "":
-        if ";" not in str_in:
+    while True:
+        if str_in == False:
+            pass
+        elif ";" not in str_in:
             print("please use a semicolon at the end of the line") #i always forget lol
         elif "=" in str_in or "data" in str_in:
             print("error: definitions are not supported in the repl".upper())
         else:
-            out = Run("main{} = " + str_in, True)
-            readline.append_history_file(1)
-            print(out)
+            try:
+                out = Run("main{} = " + str_in, True)
+                readline.append_history_file(1)
+                print(out)
+            except KeyboardInterrupt:
+                print("")
             purge()
-        print()
-        str_in = input(inp_str)
+        str_in = get_input()
 
-    print()
-    print("thanks for using the repl")
-
-inp_str = "--> "
 def get_input():
     try:
-        return input(inp_str)
+        try:
+            return input("--> ")
+        except KeyboardInterrupt:
+            print()
+            return False
     except EOFError:
-        print()
-        print("thanks for using the repl")
+        print("")
+        print("")
+        print("thank you for using the repl")
         exit()
-
-#potentially change to be to just stop the current main process
-    #definitely this would be good
-def keyboard_interrupt(signal, frame):
-    print("")
-    print("")
-    print("thank you for using the repl")
-    exit()
-signal.signal(signal.SIGINT, keyboard_interrupt)

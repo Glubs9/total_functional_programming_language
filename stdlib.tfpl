@@ -8,6 +8,8 @@ id(a) = a;
 const(a,b) = a;
 ignore(a,b) = b;
 
+INFINITE{a} = INFINITE{a}; /* not too useful. good for showing off the integration though */
+
 /* boolean functions */
 data bool = true | false;
 

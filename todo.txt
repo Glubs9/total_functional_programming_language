@@ -1,7 +1,4 @@
 4. see if you can get that logic programming idea sorted
-7. more semantics checking stuff
-	b. check that data constructors do not embed themselves
-		i. wth?
 8. optimize semantics checker so it only runs analysis once and uses that analysi sa whole bunch
 	a. maybe, think about it later.
 	b also maybe integrate the semantics checker and the executor.
@@ -12,7 +9,6 @@ types.
 	c. this would be very good and kind of important to do.
 	d. althoguh it would require finding the rturn types of functions
 
-
 10. more complex type inference
 	a. like a simplified hindley milner without polymorphism.
 	b. like we can look at the argumnet functions' types nd build an inference search aroudn
@@ -21,13 +17,3 @@ types.
 
 12. add file loading?
 13. add strings? (or a character type)
-
-16. check functions are called with right brackts
-
-17. update repl to allow history and stuff
-	a. might require a package maybe?
-
-18. need to standardise error messages.
-
-19. maybe add thing to handle sys.exit in repl
-	a. like if we can catch it and return to top
