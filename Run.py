@@ -5,7 +5,7 @@ from Lexer import Lex
 from Parser import Parse
 from ICGenerator import Generate_IC
 from Executor import Data, Execute, depth
-from SemanticsChecker import Semantics_Checker
+from SemanticsCheckers.SemanticsChecker import Semantics_Checker
 
 #runs a string. Execute boolean decided if this string should be run through main. (this is
     #sometimes not used when loading libraries)
