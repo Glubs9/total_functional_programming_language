@@ -30,3 +30,6 @@ types.
 
 17. update repl to allow history and stuff
 	a. might require a package maybe?
+
+18. need to standardise error messages.
+	a. potentially with like a monad or something
