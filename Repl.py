@@ -4,6 +4,11 @@ from sys import exit
 import signal
 import readline
 
+try:
+    readline.read_history_file()
+except FileNotFoundError:
+    readline.write_history_file()
+
 #bit hardcoded but it kinda has to be
 def Repl():
     purge()
@@ -20,6 +25,7 @@ def Repl():
             print("error: definitions are not supported in the repl".upper())
         else:
             out = Run("main{} = " + str_in, True)
+            readline.append_history_file(1)
             print(out)
             purge()
         print()

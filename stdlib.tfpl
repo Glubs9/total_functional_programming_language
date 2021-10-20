@@ -3,8 +3,10 @@ data pair = cons[a, b];
 data maybe = just[a] | nothing;
 data unit = unit;
 
-/* misc combinators, not too many cause higher order functions are not supported */
+/* misc combinators, not too many cause higher order functions are not supported. also not that useful */
 id(a) = a;
+const(a,b) = a;
+ignore(a,b) = b;
 
 /* boolean functions */
 data bool = true | false;
