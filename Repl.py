@@ -2,6 +2,7 @@ from Run import Run
 from Executor import purge
 from sys import exit
 import signal
+import readline
 
 #bit hardcoded but it kinda has to be
 def Repl():

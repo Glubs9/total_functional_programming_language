@@ -3,9 +3,7 @@
     #it checks for primitive functions
 
 from BottomChecker import Bottom_Checker
-from DepthChecker import Depth_Checker
 from TotalChecker import Total_Checker
-from PrimitiveChecker import Primitive_Checker
 from StructuralChecker import Structural_Checker
 from ArityChecker import Arity_Checker
 from CircularChecker import Circular_Checker

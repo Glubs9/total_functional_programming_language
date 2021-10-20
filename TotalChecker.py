@@ -132,19 +132,6 @@ def check_arg(arg, data_list):
                 return False
     return True
 
-"""
-old logic for total checker which I don't want deleted right now
-raise Exception("not implemented")
-
-zeros = get_args_with_name(arg, "0")
-if len(zeros) == 0: return False #no zeros
-elif len(zeros) == len(arg): return False #only zero cases
-non_zeros = filter(lambda n: type(n) is tuple, arg) #similar to get args with name but with tuples
-non_zeros_less = list(map(lambda n: n[2][0], non_zeros)) #destructs the successor tuple
-if check_arg(non_zeros_less, data_list): return True
-return False #maybe raise exception
-"""
-
 def find_type(arg, data_list):
     arg1 = arg[0] #we should be able to find it through only the first arg
     for n in data_list:
