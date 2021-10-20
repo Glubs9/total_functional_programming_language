@@ -1,0 +1,14 @@
+from sys import exit
+from functools import reduce
+
+func_type = {} #global because it needs to be stored between file loads
+
+def detect_types(functions, data):
+    print("functions=", functions, "data=", data)
+    it_list = reduce(lambda n1,n2: n1+n2, map(lambda n: n[2], data), []) + list(map(lambda n: n[1], functions))
+    print("it_list=", it_list)
+    for n in it_list:
+
+def Bracket_Checker(functions, data):
+    types = detect_types(functions, data)
+    return True

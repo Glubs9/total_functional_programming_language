@@ -46,9 +46,8 @@ zero() = 0;
 pred(0) = zero();
 pred(s[a]) = a;
 
-pred_proj(a,b,c) = pred(proj_1(a,b,c));
-minus(0,x) = id(x);
-minus(s[n],x) = pred_proj(n,minus(n,x),x);
+minus(n,0) = n;
+minus(n,s[x]) = pred(minus(n, x));
 
 /* ackermann not too practical but I wanted an example of a non-primitive function */
 ack{0, n} = s[n];
@@ -78,11 +77,6 @@ gte(a,b) = not(lt(a,b));
 
 /* list functions */
 data list = list[a,list] | end;
-
-head(end) = end;
-head(list[a,b]) = a;
-tail(end) = end;
-tail(list[a,b]) = b;
 
 leq(end, end) = true; /* list equals */
 leq(list[_, __], end) = false;

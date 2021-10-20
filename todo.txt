@@ -1,9 +1,7 @@
 4. see if you can get that logic programming idea sorted
 7. more semantics checking stuff
-	a. check that data constructors are unique
 	b. check that data constructors do not embed themselves
 		i. wth?
-	c. check arities of functions and constructors
 8. optimize semantics checker so it only runs analysis once and uses that analysi sa whole bunch
 	a. maybe, think about it later.
 	b also maybe integrate the semantics checker and the executor.
@@ -24,12 +22,12 @@ types.
 12. add file loading?
 13. add strings? (or a character type)
 
-15. add check to make sure only one type is used in each function
-
 16. check functions are called with right brackts
 
 17. update repl to allow history and stuff
 	a. might require a package maybe?
 
 18. need to standardise error messages.
-	a. potentially with like a monad or something
+
+19. maybe add thing to handle sys.exit in repl
+	a. like if we can catch it and return to top

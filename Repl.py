@@ -39,7 +39,8 @@ def get_input():
 #potentially change to be to just stop the current main process
     #definitely this would be good
 def keyboard_interrupt(signal, frame):
-    print()
+    print("")
+    print("")
     print("thank you for using the repl")
     exit()
 signal.signal(signal.SIGINT, keyboard_interrupt)

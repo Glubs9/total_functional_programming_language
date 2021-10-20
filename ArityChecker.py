@@ -5,8 +5,8 @@
 from functools import reduce
 from sys import exit
 
-data_arities = {}
-function_arities = {}
+data_arities = {} #data arities are global list because it needs to keep memory between file loading
+function_arities = {} #same here
 
 def get_data_arities(): #called in executor. used to avoid double computation. THis technique should be used more often.
     return data_arities #global keyword unecersarry
