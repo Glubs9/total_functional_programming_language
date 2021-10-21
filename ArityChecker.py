@@ -4,6 +4,7 @@
 
 from functools import reduce
 from sys import exit
+from Stdlib import stdlib_args
 
 data_arities = {} #data arities are global list because it needs to keep memory between file loading
 function_arities = {} #same here
@@ -48,11 +49,12 @@ def Arity_Checker(functions, data):
 def check_arity(function):
     return arity_rec(function[2])
 
-#didn't work :(
 def arity_rec(func_call):
     if type(func_call) is list: return True
     am = -1
-    if func_call[0] == "data-constructor":
+    if func_call[1] in stdlib_args:
+        am = stdlib_args[func_call[1]]
+    elif func_call[0] == "data-constructor":
         if func_call[1] not in data_arities:
             print("error: call to non-existent data-constructor".upper(), func_call[1])
             exit()
@@ -62,7 +64,7 @@ def arity_rec(func_call):
             print("error: call to non-existent function".upper(), func_call[1])
             exit()
         am = function_arities[func_call[1]]
-    if len(func_call[2]) != am: #check if 0 constructors follow this law
+    if len(func_call[2]) != am and func_call[1] not in stdlib_args: #check if 0 constructors follow this law
         return func_call[1]
     for n in func_call[2]:
         tmp = arity_rec(n)

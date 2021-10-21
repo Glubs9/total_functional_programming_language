@@ -23,7 +23,11 @@ else:
         out = Run(inp_file, False)
         Repl()
     else:
-        out = Run(inp_file)
-        print("the output of running main{} in file " + sys.argv[1] + " is: ")
-        print(out)
-        print("with a depth of", depth(out))
+        try:
+            out = Run(inp_file)
+            print("the output of running main{} in file " + sys.argv[1] + " is: ")
+            print(out)
+            print("with a depth of", depth(out))
+        except KeyboardInterrupt:
+            print("")
+            print("error: keyboardinterrupt".upper())

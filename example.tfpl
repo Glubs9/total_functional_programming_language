@@ -1,0 +1,15 @@
+inf_on_odd{0, original} = true;
+inf_on_odd{s[0], original} = inf_on_odd{original, original};
+inf_on_odd{s[s[a]], original} = inf_on_odd{a, original};
+
+if_not_bottom(!, a, b) = b;
+if_not_bottom(_, a, b) = a;
+
+even_check(0) = list[0, end];
+even_check(s[a]) = if_not_bottom(
+        inf_on_odd{a, a},
+        list[a, even_check(a)],
+        even_check(a)
+	);
+
+main{} = even_check(s[s[s[0]]]);

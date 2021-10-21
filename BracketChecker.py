@@ -1,5 +1,6 @@
 from sys import exit
 from functools import reduce
+from Stdlib import stdlib_types
 
 func_type = {} #global because it needs to be stored between file loads
 
@@ -18,6 +19,7 @@ def detect_types(functions, data):
             func_type[n[1]] = n[0]
         else:
             raise Exception("unknown case in detect_types")
+    func_type.update(stdlib_types)
 
 def Bracket_Checker(functions, data):
     detect_types(functions, data)

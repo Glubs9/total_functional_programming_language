@@ -32,6 +32,7 @@ def Repl():
                 print(out)
             except KeyboardInterrupt:
                 print("")
+                print("error: KeyboardInterrupt".upper())
             purge()
         str_in = get_input()
 

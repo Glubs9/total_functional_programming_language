@@ -4,6 +4,7 @@ from collections import defaultdict
 from sys import exit
 from functools import reduce
 from ArityChecker import get_data_arities
+from Stdlib import get_stdlib, stdlib_args, set_stdlib_funcs
 
 #global_scope contains a function name mapped to a list of Function objects.
 global_scope = defaultdict(lambda: [])
@@ -48,15 +49,6 @@ def define_functions(IC):
             global_scope[n[1][0][1]].append(Function(construct_args(n[1]), n[2], n[1][0][0]))
         #tuple repr is a little ugly
 
-"""
-#ADD DATA FUNCTIONS HERE AND DOUBLE CHECK DATA DOESNT CALL ONLY ONE
-def define_data(IC): #data constructors being defined. Not data class. This naming system is a little confusing.
-    for n in IC:
-        if n[0] == "data".upper():
-            for i in n[2]:
-                data_arities[i[0][1] if type(i[0]) is tuple else i[0]] = len(i) - 1 #little ick but it will do
-"""
-
 #calculates the depth of unary arithmetic. Useful in outputting the results of a file.
     #yikes need to re-write this or delete it
 def depth(data: Data): #type data from execute.py
@@ -80,20 +72,11 @@ def destroy_self(s):
             destroy_stack(n)
             break
 
-stdlib = {
-        "id": lambda s: None, #id doesn't affect the stack so nothing happens (maybe change later)
-        "!": lambda s: s.data_stack.append(Data('!', [])),
-        "print": id_print,
-        "destroy": destroy,
-        "destroy_self": destroy_self
-}
-#used in arg_count which is used later on
-stdlib_args = {
-        "id": 1, #kinda? not in the implementation but in the theory or something
-        "!": 0,
-        "destroy": 0,
-        "print": 1
-}
+def bottom(s):
+    s.data_stack.append(Data("!", []))
+
+set_stdlib_funcs(id_print, destroy, destroy_self, bottom) #the reason this exists is explained in Stdlib.py
+stdlib = get_stdlib() #after we have set stdlib_funcs we need to set the stdlib variable
 
 def call_stdlib(func_name, stack, func_call):
     if func_name == "destroy": #ewww please stop gross code :(
@@ -175,10 +158,6 @@ def handle_var(name, scope, stack):
     for n in scope: 
         if n[0] == name: stack.data_stack.append(n[1])
 
-"""
-"0": lambda s: s.data_stack.append(Data('0', [])), 
-"s": lambda s: s.data_stack.append(Data('s', [s.data_stack.pop()])),
-"""
 def call_data(func_name, s):
     data_vals = []
     for n in range(data_arities[func_name]): data_vals.append(s.data_stack.pop()) #Might be able to simplify?
@@ -248,8 +227,13 @@ def debug_stacks(stacks, it_am):
         print("for stack " + str(i))
         #print("destroy pos", str(stacks[i].destroy_pos))
         print("call_satck")
-        for n in stacks[i].call_stack:
-            print(n)
+        if len("call_stack") < 6:
+            for n in stacks[i].call_stack:
+                print(n)
+        else:
+            print("...")
+            for n in stacks[i].call_stack[-6:]:
+                print(n)
         print("data_stack")
         for n in stacks[i].data_stack:
             print(n)
