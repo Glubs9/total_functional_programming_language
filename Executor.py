@@ -82,10 +82,13 @@ def call_stdlib(func_name, stack, func_call):
     if func_name == "destroy": #ewww please stop gross code :(
         destroy(stack, func_call)
         return
+    """
     if len(stack.data_stack) != 0:
         tmp = stack.data_stack.pop()
         stack.data_stack.append(tmp)
-        if tmp.name == "!": return
+        if tmp.name == "!": 
+            return #what is happening here?
+    """
     stdlib[func_name](stack)
 
 #unifies a functions argument definniiton with the passed arguments. i.e: f(s[a]) passed with f(s[s[0]]) a becomes s[0]
@@ -216,24 +219,20 @@ def destroy_stack(pos):
     change_am = 0
     for n in reversed(range(0, len(stacks))):
         if n in destroy_posses:
-            change_am-=1
+            change_am = change_am - 1
             stacks.pop(n)
         else:
             update_destroy(stacks[n], change_am, destroy_posses)
 
-def debug_stacks(stacks, it_am):
+def debug_stacks(stacks, it_am, stack_num):
     print("it am = " + str(it_am))
+    print("stack operation num =", stack_num)
     for i in range(len(stacks)):
         print("for stack " + str(i))
         #print("destroy pos", str(stacks[i].destroy_pos))
         print("call_satck")
-        if len("call_stack") < 6:
-            for n in stacks[i].call_stack:
-                print(n)
-        else:
-            print("...")
-            for n in stacks[i].call_stack[-6:]:
-                print(n)
+        for n in stacks[i].call_stack:
+            print(n)
         print("data_stack")
         for n in stacks[i].data_stack:
             print(n)
@@ -255,7 +254,7 @@ def run():
                 new_stack(stacks[i])
                 ac = arg_count(tmp[1][1])
                 [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
-                stacks[0].call_stack.append(([], ("primitive", "!"), "primitive"))
+                stacks[0].call_stack.append(([], ("data-constructor", "!"), "primitive"))
                 i+=1 #stack index
                 stacks[i].call_stack.append(([], ("primitive", "destroy", 0), "primitive"))
             call_func(tmp[1][1], tmp[0], stacks[i], tmp)
@@ -264,10 +263,10 @@ def run():
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
         it+=1
-        #debug_stacks(stacks, it)
+        debug_stacks(stacks, it, i)
 
     #print("finished!") #unecersarry but very fun :)
-    #debug_stacks(stacks, it+1)
+    debug_stacks(stacks, it+1)
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     global data_arities

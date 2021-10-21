@@ -1,4 +1,5 @@
 /* misc data definitions (other definitions exist in their given sections) */
+data bottom = !; /* bottom being defined the same as unit points to some theoretical issues */
 data pair = cons[a, b];
 data maybe = just[a] | nothing;
 data unit = unit;
@@ -7,6 +8,8 @@ data unit = unit;
 id(a) = a;
 const(a,b) = a;
 ignore(a,b) = b;
+catch{!} = destroy_self{};
+catch{a} = a;
 
 INFINITE{a} = INFINITE{a}; /* not too useful. good for showing off the integration though */
 

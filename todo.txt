@@ -19,3 +19,10 @@ types.
 13. add strings? (or a character type)
 
 14. modularize executor
+
+15. don't allow bottom in primitive functions
+
+16. fix bug in example.tfpl
+	- i think it might be something to do with iit not doing bottom or something.
+
+17. destroy self doesn't make sense :(

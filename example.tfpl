@@ -2,14 +2,18 @@ inf_on_odd{0, original} = true;
 inf_on_odd{s[0], original} = inf_on_odd{original, original};
 inf_on_odd{s[s[a]], original} = inf_on_odd{a, original};
 
-if_not_bottom(!, a, b) = b;
-if_not_bottom(_, a, b) = a;
+even(0) = true;
+even(s[0]) = false;
+even(s[s[a]]) = even(a);
 
-even_check(0) = list[0, end];
-even_check(s[a]) = if_not_bottom(
-        inf_on_odd{a, a},
-        list[a, even_check(a)],
+if_not_bottom{!, a, b} = b;
+if_not_bottom{c, a, b} = a;
+
+even_check(0) = 0;
+even_check(s[a]) = catch{if_not_bottom{
+	inf_on_odd{a, a},
+        s[even_check(a)],
         even_check(a)
-	);
+}};
 
-main{} = even_check(s[s[s[0]]]);
+main{} = catch{even_check(s[0])};
