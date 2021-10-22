@@ -75,7 +75,15 @@ def destroy_self(s):
 def bottom(s):
     s.data_stack.append(Data("!", []))
 
-set_stdlib_funcs(id_print, destroy, destroy_self, bottom) #the reason this exists is explained in Stdlib.py
+def split(s):
+    new_stack(stacks[i])
+    ac = arg_count(tmp[1][1])
+    [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
+    stacks[0].call_stack.append(([], ("data-constructor", "!"), "primitive"))
+    i+=1 #stack index
+    stacks[i].call_stack.append(([], ("primitive", "destroy", 0), "primitive"))
+
+set_stdlib_funcs(id_print, destroy, destroy_self, bottom, split) #the reason this exists is explained in Stdlib.py
 stdlib = get_stdlib() #after we have set stdlib_funcs we need to set the stdlib variable
 
 def call_stdlib(func_name, stack, func_call):
@@ -247,12 +255,14 @@ def run():
 
         #this is an extra thing only so far used with if but may be extended to other things later
         tmp = stacks[i].call_stack.pop()
-        if type(tmp[1]) is str: #yikes I need to fix this
+        if type(tmp[1]) is str: #yikes I need to fix this (this is data called with no args i.e: 0)
             call_func(tmp[1], tmp[0], stacks[i], tmp)
         else:
-            if tmp[2] == "primitive" and tmp[1][0] == "non-primitive":
+            if tmp[2] == "primitive" and tmp[1][0] == "non-primitive" or tmp[1][1][0] == "#":
+                if tmp[1][1][0] == "#":
+                    tmp = (tmp[0], (tmp[1][0], tmp[1][1][1:]), tmp[2])
                 new_stack(stacks[i])
-                ac = arg_count(tmp[1][1])
+                ac = arg_count(tmp[1][1]) 
                 [stacks[0].data_stack.pop() for n in range(ac)] #maybe need to pop call_stack
                 stacks[0].call_stack.append(([], ("data-constructor", "!"), "primitive"))
                 i+=1 #stack index
@@ -263,10 +273,10 @@ def run():
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
         it+=1
-        debug_stacks(stacks, it, i)
+        #debug_stacks(stacks, it, i)
 
     #print("finished!") #unecersarry but very fun :)
-    debug_stacks(stacks, it+1)
+    #debug_stacks(stacks, it+1, i)
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     global data_arities

@@ -9,11 +9,14 @@ even(s[s[a]]) = even(a);
 if_not_bottom{!, a, b} = b;
 if_not_bottom{c, a, b} = a;
 
-even_check(0) = 0;
-even_check(s[a]) = catch{if_not_bottom{
-	inf_on_odd{a, a},
-        s[even_check(a)],
-        even_check(a)
-}};
+/* something like manually being able to split stacks would be really useful */
+/* cause like doing this stuff is good ot make non-prim stay non-prim but when we actually trying to
+ * manipulate it it's way needs to happen */
+even_check{0} = 0;
+even_check{s[a]} = if_not_bottom{
+	#inf_on_odd{a, a},
+        s[even_check{a}],
+        even_check{a}
+};
 
-main{} = catch{even_check(s[0])};
+main{} = even_check{s[s[s[0]]]};
