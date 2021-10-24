@@ -99,33 +99,8 @@ any(list[n, tail]) = if(n, true, any(tail)); /* not strictly a normal definition
 all(end) = true;
 all(list[n, tail]) = and(n, all(tail));
 
-/* doesn't work :( */
-
-/* this has to be the slowest way to sort a list outside of bogosort. has to go through every
- * possibility and iterate down every single number ever comparison */
-bubble_it(end) = end;
-bubble_it(list[h,end]) = list[h,end];
-bubble_it(list[a, list[b, t]]) = if(
-	lt(a,b), 
-	list[a, bubble_it(list[b, t])],
-	list[b, bubble_it(list[a, t])]
-);
-
-/* due to some issues with evalulation. I have added an extra primitive parameter to bubble sort
- * which acts as an upper bound for the amount of iterations. Later this will be made into a
- * non-prim function when if is fixed (it's also quite slow due to let not being implemented as well) */
-	/* although the fact that we can chuck an upper bound on the iteration and have it become
-	 * provably terminating is really cool. Kind of a real, more intuitive example of these kinds of 
-	 * termination proofs */
-	/* doesn't work :( */
-/*
-bubble_prim(l, 0) = l;
-bubble_prim(l, s[a]) = if(
-	leq(l, bubble_it(l)),
-	l,
-	bubble_prim(bubble_it(l), a)
-);
-*/
+len(end) = 0;
+len(list[a, b]) = s[len(b)];
 
 /* slow :( */
 concat(end, l) = l;
@@ -150,3 +125,10 @@ quick_sort{list[h, t]} = concat(
 	quick_sort{filter_less_than(t, h)}, 
 	list[h, quick_sort{filter_greater_than(t, h)}]
 );
+
+/* misc stack manipulation */
+catch{!} = destroy_self{};
+catch{a} = a;
+
+if_not_bottom{!, a, b} = b;
+if_not_bottom{c, a, b} = a;

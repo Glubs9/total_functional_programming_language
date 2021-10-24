@@ -26,3 +26,5 @@ types.
 	- i think it might be something to do with iit not doing bottom or something.
 
 17. destroy self doesn't make sense :(
+
+18. write checker for embedded comments

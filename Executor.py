@@ -253,7 +253,6 @@ def run():
     i = 0 #stack index
     while (stacks[i].call_stack != []):
 
-        #this is an extra thing only so far used with if but may be extended to other things later
         tmp = stacks[i].call_stack.pop()
         if type(tmp[1]) is str: #yikes I need to fix this (this is data called with no args i.e: 0)
             call_func(tmp[1], tmp[0], stacks[i], tmp)
@@ -273,7 +272,7 @@ def run():
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
         it+=1
-        #debug_stacks(stacks, it, i)
+        #debug_stacks(stacks, it, -1)
 
     #print("finished!") #unecersarry but very fun :)
     #debug_stacks(stacks, it+1, i)
