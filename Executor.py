@@ -272,10 +272,10 @@ def run():
         if i >= len(stacks): i = 0 #loop back to the start of the stack
 
         it+=1
-        debug_stacks(stacks, it, -1)
+        #debug_stacks(stacks, it, -1)
 
     #print("finished!") #unecersarry but very fun :)
-    debug_stacks(stacks, it+1, i)
+    #debug_stacks(stacks, it+1, i)
     return i
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
