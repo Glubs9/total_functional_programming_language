@@ -1,3 +1,19 @@
 /* an attempt to write a non-deterministic colouring algorithm through logic programming esque stuff kinda */
 
+/* what is fun about this is normal logic programming is dfs unless you force it to be dfs (using
+ * append in prolog or whatever) but by doing it like this we have bfs as we run things concurrently
+ * using a queue */
 
+/* this is a simple example of generating natural numbers using the non-determinism */
+/* it is not efficient but it *should* generate all the natural numbers (with some repetitions) */
+zero() = 0;
+
+nums{} = if_not_bottom{
+	#zero(), #splits the branch
+	0,
+	s[nums{}]
+};
+
+repeat{a} = repeat{print{nums{}}};
+
+main{} = repeat{0};
