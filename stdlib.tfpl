@@ -1,8 +1,8 @@
 /* misc data definitions (other definitions exist in their given sections) */
-data bottom = !; /* bottom being defined the same as unit points to some theoretical issues */
+data bottom = !; 
 data pair = cons[a, b];
 data maybe = just[a] | nothing;
-data unit = unit;
+data unit = unit; /* bottom being defined the same as unit points to some theoretical issues */
 
 /* misc combinators, not too many cause higher order functions are not supported. also not that useful */
 id(a) = a;

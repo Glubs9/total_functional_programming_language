@@ -1,3 +1,4 @@
+
 inf_on_odd{0, original} = true;
 inf_on_odd{s[0], original} = inf_on_odd{original, original};
 inf_on_odd{s[s[a]], original} = inf_on_odd{a, original};
@@ -6,9 +7,6 @@ even(0) = true;
 even(s[0]) = false;
 even(s[s[a]]) = even(a);
 
-/* something like manually being able to split stacks would be really useful */
-/* cause like doing this stuff is good ot make non-prim stay non-prim but when we actually trying to
- * manipulate it it's way needs to happen */
 even_check{0} = end;
 even_check{s[a]} = if_not_bottom{
 	#inf_on_odd{a, a},
@@ -20,13 +18,16 @@ divide_two(0) = 0;
 divide_two(s[0]) = s[0];
 divide_two(s[s[a]]) = s[divide_two(a)];
 
-check_list{li, num} = if(
+if_destroy{true, li} = li;
+if_destroy{false, li} = destroy_self{}; /* to get aroudn the eager if statement */
+
+check_list{li, num} = if_destroy{
 	neq(len(li), divide_two(num)),
-	li,
-	destroy_self{}
-);
+	li
+};
 
-gen_evens{n} = check_list{print(even_check{n}), n};
+gen_evens{n} = check_list{even_check{n}, n};
 
-/* main{} = gen_evens{s[s[s[s[s[s[s[0]]]]]]]}; */
-main{} = gen_evens{s[s[s[0]]]};
+main{} = gen_evens{s[s[s[s[s[s[s[0]]]]]]]};
+
+

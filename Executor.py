@@ -276,6 +276,7 @@ def run():
 
     #print("finished!") #unecersarry but very fun :)
     #debug_stacks(stacks, it+1, i)
+    return i
 
 def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute or just define functions
     global data_arities
@@ -285,9 +286,9 @@ def Execute(IC, execute=True): #IC = Intermediate code. execute == do we execute
         s = Stack([], []) #, False)
         stacks.append(s)
         call_func("main", [], s, None)
-        run() #nothing passed, all are global variables :(
-        if len(s.data_stack) == 0: return Data("!", [])
-        return s.data_stack[0] #IMPORTANT: CHANGE LATER
+        pos = run() #nothing passed, all are global variables :(
+        #if len(s.data_stack) == 0: return Data("!", [])
+        return stacks[pos].data_stack[0] 
     else:
         return None #little risky so make sure all calls to execute are properly checked
 
