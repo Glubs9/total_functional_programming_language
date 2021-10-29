@@ -8,11 +8,10 @@ A repl comes preinstalled which can be opened with python3 Main.py repl.
 if you want to load a file and enter repl you can run python3 Main.py [file_name] repl.
 
 # Tutorial
-[Language Design Doc](https://docs.google.com/document/d/1RcecCvSwV43WCeCUSMUChC1xEJVVtFZClC1rhoPUaRE/edit?usp=sharing) <br>
+
+[Language Design Doc (work in progress)](https://docs.google.com/document/d/1RcecCvSwV43WCeCUSMUChC1xEJVVtFZClC1rhoPUaRE/edit?usp=sharing) <br>
+[Maths description and termination proof (Work in progress)](https://docs.google.com/document/d/1hiLrFOQYLnrfDQWOw35apVO4qCeI2rDaucLd4eBO6k8/edit?usp=sharing)
 [Development Blog](https://jontedeakin.blogspot.com/) <br>
-#### data type
-This language uses unary successor arithmetic (akin to mu-recursive functions). 0 is the base case
-and every number is defined as the successor of 0. Successor is written s[0].                 
 
 #### basic functions
 Entry starts at a main function called main.           
