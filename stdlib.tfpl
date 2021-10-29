@@ -1,3 +1,5 @@
+/* this file includes all the stdlib stuff that is implemented in the langauge itself */
+
 /* misc data definitions (other definitions exist in their given sections) */
 data bottom = !; 
 data pair = cons[a, b];

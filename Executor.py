@@ -1,4 +1,5 @@
-#executes code.  #another thing it does is build the internal symbol dictionary from func name to definition, which can be done without executing the code.
+#executes code.  
+    #another thing it does is build the internal symbol dictionary from func name to definition, which can be done without executing the code. and is used when building stdlib
 
 from collections import defaultdict
 from sys import exit

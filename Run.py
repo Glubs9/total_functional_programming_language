@@ -1,4 +1,6 @@
-#this file is used to avoid circular dependency and simplify imports
+#this file runs a string or it just builds the symbol lists.
+    #it is separated into a separate file because of a circular dpeendency with Executor and Repl
+        #both files call this one
 
 from PreProcess import PreProcess
 from Lexer import Lex

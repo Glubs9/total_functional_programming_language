@@ -1,9 +1,4 @@
 #this file parses lexed tokens.
-    #the only issue currently with this is that I am using tuples to represent my ast.
-    #I may have to change this later to a more readable and understandable format, 
-    #as for now I have opted not to as this is understandable enough and it hasn't caused enough
-    #problems for me to need to change this. (I understand the concept of technical debt but I have chosen to ignore it)
-
 #entry function at the bottom of the file
 
 def split_lines(tokens, split_str): #equivalent of .split(split_str) for a token list

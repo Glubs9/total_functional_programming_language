@@ -1,4 +1,5 @@
 #checks there is no literal with s[!]
+
 from sys import exit
 
 def Bottom_Checker(funcs):

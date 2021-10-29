@@ -1,6 +1,5 @@
 #this file takes in an ast and checks it to make sure it's valid.
-    #it checks to make sure there is never a literal constructor on the bottom type, e.g: s[!]
-    #it checks for primitive functions
+    #it mostly just calls other checkers
 
 from BottomChecker import Bottom_Checker
 from TotalChecker import Total_Checker
@@ -26,7 +25,7 @@ def Semantics_Checker(ast): #note, called functions don't return bools, they err
     Circular_Checker(prim_funcs)
     return ast
 
-def remove_hashtag(function):
+def remove_hashtag(function): #so that we can detect functions and stuff even if they have the split symbol
     if type(function) is list: return function
     elif type(function) is tuple:
         if function[1][0] == "#":

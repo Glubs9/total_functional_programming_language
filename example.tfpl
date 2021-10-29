@@ -1,11 +1,8 @@
+/* this function shows off how we can make use of the non-primitive stff to still get the answer you want */
 
 inf_on_odd{0, original} = true;
 inf_on_odd{s[0], original} = inf_on_odd{original, original};
 inf_on_odd{s[s[a]], original} = inf_on_odd{a, original};
-
-even(0) = true;
-even(s[0]) = false;
-even(s[s[a]]) = even(a);
 
 even_check{0} = end;
 even_check{s[a]} = if_not_bottom{

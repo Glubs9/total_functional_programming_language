@@ -1,3 +1,5 @@
+#this file checks that there is only one data type present in the argument.
+
 from TotalChecker import get_data_list, group_functions
 from sys import exit
 

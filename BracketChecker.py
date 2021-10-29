@@ -1,3 +1,5 @@
+#this files checks that the right braackets are used with the right functions
+
 from sys import exit
 from functools import reduce
 from Stdlib import stdlib_types

@@ -1,9 +1,5 @@
-#checks for mutual recursion
-    #this can be allowed if the calls between the mutually recursive functions are destructuring
-    #input but that requires more effort than i can be bothered to do
-    #like as a generalization of recursion we cna just say any function that eventually calls this
-    #function must only everbe called with destructured arguments. which, if we allow vertexes to self,
-    #does cover all cases. Not now but something to consider
+#checks for mutual recursion in primitive functions
+    #and errors if discovered
 
 from TotalChecker import group_functions
 from collections import defaultdict

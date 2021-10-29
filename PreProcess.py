@@ -1,7 +1,4 @@
 #this file preprocessess the string
-#as of yet it only checks for balanced brackets and balanced definitions
-    #this functionality could be moved but it is easiest to write and understand if it is here.
-#more may be added to this file later
 
 from sys import exit
 
@@ -18,7 +15,7 @@ def PreProcess(str_in):
 brackets = {"(" : ")", "{" : "}", "[" : "]"}
 opening = {k for k,v in brackets.items()} #maybe a little unecersarry but renaming makes it more readable
 closing = {v for k,v in brackets.items()} #maybe a little unecersarry but this makes it faster
-def check_brackets(str_in):
+def check_brackets(str_in): #checks balanced brackets
     stack = []
     for n in str_in:
         if   n in closing and len(stack) == 0: return False #formatting :)))))
@@ -27,9 +24,9 @@ def check_brackets(str_in):
     if len(stack) != 0: return False
     return True
 
-def check_balanced_semicolons(str_in):
+def check_balanced_semicolons(str_in): #check there is equal amount of semi colons and =
     return len([n for n in str_in if n == ";"]) == len([n for n in str_in if n == "="]) 
 
 import re
-def remove_comments(str_in): #regular expression causes error with embedded comments. Fix them later
+def remove_comments(str_in): #regular expression causes error with embedded comments.
     return re.sub("/\*.*?\*/", "", str_in, flags=re.DOTALL)

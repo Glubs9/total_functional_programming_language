@@ -1,3 +1,5 @@
+#this file checks that the recursive call is done with a destructured version of the input arg
+
 from sys import exit
 from TotalChecker import get_args
 
@@ -14,7 +16,6 @@ def Structural_Checker(prim_funcs):
             exit()
     return True
 
-#turns out this is passed a list of args. change to handle that TODO:#!#!#!
 def data_depth(inp):
     s = 0
     for data in inp:
@@ -22,8 +23,7 @@ def data_depth(inp):
         s += _data_depth(data)
     return s
 
-#we return max data depth? which should be right? I haven't proved it but it should work?
-    #i did do sum before which did make sense. gotta look into how coq does it more
+#recursive call used in data_depth, shouldn't be called by istelf
 def _data_depth(data):
     if type(data) is not tuple: return 0
     else:

@@ -1,8 +1,5 @@
 #checks that a function covers all possible inputs
     #this is done recursively and is fairly complicated. 
-#this is not currently used and has been repalced by primitivechecker.py
-#i have kept this here because I might need it later and I put a lot of work into it so I am proud
-#of it.
 
 from itertools import groupby
 from sys import exit
