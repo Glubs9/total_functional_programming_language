@@ -21,7 +21,7 @@ data bool = true | false;
 not(true) = false;
 not(false) = true;
 
-and(false, a) = false; /* doesn't type check but it's whatever */
+and(false, a) = false; 
 and(true, true) = true;
 and(true, false) = false;
 
