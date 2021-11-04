@@ -9,7 +9,7 @@ if you want to load a file and enter repl you can run python3 Main.py [file_name
 
 # Tutorial
 
-[Language Design Doc (work in progress)](https://docs.google.com/document/d/1RcecCvSwV43WCeCUSMUChC1xEJVVtFZClC1rhoPUaRE/edit?usp=sharing) <br>
+[Language Design Doc](https://docs.google.com/document/d/1RcecCvSwV43WCeCUSMUChC1xEJVVtFZClC1rhoPUaRE/edit?usp=sharing) <br>
 [Maths description and termination proof (Work in progress)](https://docs.google.com/document/d/1hiLrFOQYLnrfDQWOw35apVO4qCeI2rDaucLd4eBO6k8/edit?usp=sharing) <br>
 [Development Blog](https://jontedeakin.blogspot.com/) <br>
 
